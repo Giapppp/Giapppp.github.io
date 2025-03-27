@@ -105,7 +105,7 @@ With that, the verifier checks the following:
 
 If all these are correct, then the proximity test is passed with overwhelming probability.
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_1.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_1.png)
 
 ##### Soundness
 
@@ -148,7 +148,7 @@ In short:
 - __Columns are as committed in the Merkle Tree__, true because this was done in the previous test.
 - __Inner product between $\overrightarrow{u}$ and each column is consistent__. which is checked using the same randomly picked columns (for efficiency)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_2.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_2.png)
 
 ##### Soundness (intuition)
 
@@ -175,9 +175,9 @@ This method has proof size $\mathcal{O}(\sqrt{d})$ and verifier time $\mathcal{O
 
 ### Practice
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_3.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_3.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_4.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_4.png)
 
 ### Linear-time encodable code
 
@@ -187,7 +187,7 @@ Expander graph is a graph that has strong connectivity properties, quantified us
 
 We can use an expander as a linear code by let each vertex in the left correspond to symbols of the message $m$, and let the right side correspond to symbols of the codeword.
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_5.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_5.png)
 
 Note that this way is not sufficient; it fails on the "constant relative distance" requirement. Take a message with a single non-zero for example, the codeword must look the same for all such messages. Obviously, this is not the case here, because codewords symbols change depending on which symbol of the message is non-zero.
 
@@ -217,11 +217,11 @@ To become recursive, we can use the algorithm and repeat for $k/2$, $k/4$,... un
 
 ##### Sampling of the lossless expander
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_6.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_6.png)
 
 ##### Improvements of the code
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6_7.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp6/zkp6_7.png)
 
 ### Summary
 

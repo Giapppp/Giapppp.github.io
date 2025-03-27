@@ -1,6 +1,8 @@
 ## About me:
 
-Hi, my name is Giap. This is the place where I will post my writeup for some CTF competitions and something related to mathematic
+Hi, I'm Giap from Vietnam. I will post everything I like on this website.
+
+Hope you can find something useful here.
 
 ## Contact me:
 

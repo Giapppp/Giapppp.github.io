@@ -233,6 +233,6 @@ print(long_to_bytes(flag))
 
 **P/s.** This challenge took me nearly 12 hours to solve :((
 
-![image](https://hackmd.io/_uploads/rksdhZ9Ba.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/wgc2023/wgc2023_1.png)
 
 And it isn't a game.

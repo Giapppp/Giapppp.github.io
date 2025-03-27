@@ -218,7 +218,7 @@ __Protocol:__
 
 - $V$ will accept if $f(r) = q(r) * Z_{\Omega}(r)$, this implies that $f(X) = q(X) * Z_{\Omega}(r)$ with high probability
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_1.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_1.png)
 
 Because $V$ need to evaluate $Z_{\Omega}(r)$ by itself, so we want the vanishing polynomial to be efficiently computable so the verifier can do this quickly. In this situation, our $Z_{\Omega}(r)$ can be calculated fast by square-and-multiply method.
 
@@ -258,7 +258,7 @@ __Protocol:__
 
 - The verifier will accept if $t(\omega^{k-1}) = 1$ and $t(\omega r) - t(r) f(\omega r) = q(r) (r^k - 1)$
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_2.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_2.png)
 
 The cost of this protocol is as follows:
 
@@ -296,7 +296,7 @@ __Protocol:__
 
 - If the product is $1$, it means that $\hat{f}(r) = \hat{g}(r)$, and with high probability, $\hat{f} = \hat{r}$
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_3.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_3.png)
 
 The cost of this proof is just two commitments, and six evaluations
 
@@ -337,13 +337,13 @@ $$\frac{\hat{f}(r, s)}{\hat{g}(r, s)} = \prod_{a \in \Omega} \Big ( \frac{r - s 
 
 - Therefore, by Schwartz-Zippel lemma, we can conclude that they are equal as bivariate polynomials
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_4.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_4.png)
 
 This protocol is sound and complete, assuming $2d/p$ is negligible. The cost of this protocol is just like the cost described for prod-check.
 
 ##### Summarize
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_5.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_5.png)
 
 Note that our protocols is public-coin protocol, so we can transform our protocols into non-interactive by Fiat-Shamir method.
 
@@ -363,7 +363,7 @@ PLONK is widely used in practice, some examples are listed in this table
 
 We will use an example circuit with an example evaluation. Our circuit have gates with two inputs and a single input
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_6.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_6.png)
 
 The circuit above computes $(x_1 + x_2)(x_2 + w_1)$. The public inputs are $x_1 = 5, x_2 = 6$ and the secret input (witness) is $w_1 = 1$. We can easily compute the output is $77$, which is also public. The prover will try to prove that he knows a value of $w_1$ that makes the output $77$ with the given public inputs.
 
@@ -373,7 +373,7 @@ We compile this evaluation into a computation trace, which is simply a table tha
 
 - Gate traces are given in the following table.
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_7.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_7.png)
 
 #### Step 1.5: Encode trace as a polynomial
 
@@ -401,7 +401,7 @@ Our plan is interpolates $T \in \mathbb{F}_p^{(\le d)}[X]$ such that
 
 In out example, prover interpolates $T(X)$ such that:
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_8.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_8.png)
 
 So, our polynomial will have degree 11, and prover can use FFT to compute the coefficients of $T$ in time $\mathcal{O}(d \log d)$
 
@@ -447,7 +447,7 @@ If you look at the circuit (or the table) you will notice that some outputs beco
 
 For that, the wires of $C$ are encoded with respect to their constraints
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_9.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_9.png)
 
 Now, we define a polynomial $W: \Omega \to \Omega$ that implements a rotation: $$W(\omega^{-2}, \omega^1, \omega^3) = (\omega^1, \omega^3, \omega^{-2}), W(\omega^{-1}, \omega^0) = (\omega^0, \omega^{-1})$$
 
@@ -479,7 +479,7 @@ __Protocol__:
 
     - output: correct output by __evaluation proof__
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4_10.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_10.png)
 
 __Theorem__:
 

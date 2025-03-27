@@ -113,7 +113,7 @@ Now, we will discuss more about each one of them
 
 #### Merkle Trees: The commitment
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_1.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_1.png)
 
 In this binary tree, every node is made up of the hash of its children:
 
@@ -149,7 +149,7 @@ Summary, we have:
 
 Suppose that we have a polynomial $f(x) \in \mathbb{F}_7^{\le d} [X]$, so this polynomial has values defined onver a very small $n = 7$. The degree should be small too, say something like $d = 3$
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_2.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_2.png)
 
 - $P$ Merkle-commits to all evaluations of the polynomial $f$
 
@@ -187,13 +187,13 @@ We will see ways to solve these problems within the lecture
     
     - $(1 - x_1)(1 - x_2)$ is multilinear, $x_1^2x_2$ is not
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_3.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_3.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_4.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_4.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_5.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_5.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_6.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_6.png)
 
 #### Evaluating multilinear extensions quickly
 
@@ -287,11 +287,11 @@ $$H_1(X_1) =  \sum _ {b_1 \lbrace 0, 1 \rbrace} \sum _ {b_2 \lbrace 0, 1 \rbrace
 
 We will use a notion of __transcript__, which is defined as an assignment of a value to every gate in the circuit. A transcript $T$ is a __correct transcript__ if it assigns the gate values obtained by evaluating the circuit $C$ on a valid witness $\omega$
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_7.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_7.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_8.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_8.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3_9.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_9.png)
 
 ### The polynomial IOP underlying the SNARK
 

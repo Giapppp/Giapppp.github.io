@@ -41,7 +41,7 @@ __Interactive Proof System:__
 
 An _interactive proof system_ for a language $L$ is a protocol between two algorithms: a (possibly unbounded) prover $P$ and an efficient (probabilistic polynomial time) verifier $V$
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp1_1.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp1/zkp1_1.png)
 
 At the start of the protocol, both the prover $P$ and the verifier $V$ are given some instance $x$. At the end of the protocol, the verifier $V$ either accepts (it is convinced that $x \in L$) or rejects (it is not convinced that $x \in L$)
 
@@ -79,7 +79,7 @@ Now, we want to prove a statement $x \in L$ without revealing anything else abou
 
 The goal of the verifier $V^*$ is to infer some information about x from its interaction with $P$
 
-![Image alt](https://github.com/Giapppp/Giapppp.github.io/blob/main/static/images/zkp1_2.png?raw=true)
+![Image alt](https://github.com/Giapppp/Giapppp.github.io/blob/main/static/images/zkp1/zkp1_2.png?raw=true)
 
 In other words, the verifier is given (i) all the transcript $(q_1,a_1,...q_j,a_j)$ and (ii) the internal coins (randomness) it used $(r_1,...,r_j)$ throughout the protocol. Then, it tries to learn additional information about $x$. Then, we define the _view_ of $V^*$ as the random variable
 
@@ -169,7 +169,7 @@ __About Arthur-Merlin protocol:__
 
 - Arthur-Merlin protocol is an interactive proof system in which the verifier's coin tosses are constrained to be public, mean that prover knows the coin too 
 
-![image alt](https://github.com/Giapppp/Giapppp.github.io/blob/main/static/images/zkp1_3.png?raw=true)
+![image alt](https://github.com/Giapppp/Giapppp.github.io/blob/main/static/images/zkp1/zkp1_3.png?raw=true)
 
 - The question is, is coin privacy necessary ?
 
@@ -177,6 +177,6 @@ __Theorem 1.2__(Goldwasser-Sipper): AM = IP
 
 - In practice, AM protocol can remove the interaction part by using Fiat-Shamir Heuristic
 
-![image alt](https://github.com/Giapppp/Giapppp.github.io/blob/main/static/images/zkp1_4.png?raw=true)
+![image alt](https://github.com/Giapppp/Giapppp.github.io/blob/main/static/images/zkp1/zkp1_4.png?raw=true)
 
 __Warning:__ this does NOT mean every interactive ZK proof can transform to AM protocols and then use Fiat-Shamir heuristic, since IP = AM transformation requires extra super-polynomial powers from Merlin, and for Fiat-Shamir heuristic to work, Prover must be computationally bounded so not to be able to invert H. Yet, many specific protocols, can benefit from this heuristic

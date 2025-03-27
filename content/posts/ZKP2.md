@@ -39,7 +39,7 @@ __SNARK__ systems can be further equipped with a zero-knowledge property that en
 
 zk-SNARK is really fit with blockchain, so we have lots of applications
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2_1.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2/zkp2_1.png)
 
 ### Mathematical Background
 
@@ -55,9 +55,9 @@ Let $\mathbb{F}_p$ is a finite field with $p > 2$, then we can define __Arithmet
 
 #### Argument Systems
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2_2.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2/zkp2_2.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2_3.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2/zkp2_3.png)
 
 A __preprocessing argument system__ is made up by three algorithms: Setting Algorithm, Prove Algorithm and Verify Algorithm (S, P, V):
 
@@ -87,7 +87,7 @@ A __succinct preprocessing argument system__ is made up by three algorithms: Set
 
 ### Types of preprocessing setup
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2_4.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2/zkp2_4.png)
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2_5.png)
+![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp2/zkp2_5.png)
 
