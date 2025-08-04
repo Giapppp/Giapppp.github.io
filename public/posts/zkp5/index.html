@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="Michael Neuper">
+
+  
+  
+  <meta name="description" content="In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants.
+Resources A Zero-Knowledge Version of vSQL
+Bulletproofs: Short Proofs for Confidential Transactions and More
+Exploring Elliptic Curve Pairing - Vitalik Buterin
+BLS12-381 For The Rest of Us - Ben Edgington
+Poly-commits: Pairing &amp; Discrete Log - Cryptonotes
+Detail Background Group A Group is a set $\mathbb{G}$ and an operation $*$ with these properties:">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="https://michaelneuper.github.io//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://michaelneuper.github.io//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://michaelneuper.github.io//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:title" content="Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem" />
+<meta property="og:description" content="In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants.
+Resources A Zero-Knowledge Version of vSQL
+Bulletproofs: Short Proofs for Confidential Transactions and More
+Exploring Elliptic Curve Pairing - Vitalik Buterin
+BLS12-381 For The Rest of Us - Ben Edgington
+Poly-commits: Pairing &amp; Discrete Log - Cryptonotes
+Detail Background Group A Group is a set $\mathbb{G}$ and an operation $*$ with these properties:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://michaelneuper.github.io/posts/zkp5/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2025-03-28T00:00:22+07:00" /><meta property="og:site_name" content="Giap&#39;s Blog" />
+
+
+
+  
+  <link rel="canonical" href="https://michaelneuper.github.io/posts/zkp5/">
+
+  
+  
+  <meta itemprop="name" content="Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem">
+<meta itemprop="description" content="In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants.
+Resources A Zero-Knowledge Version of vSQL
+Bulletproofs: Short Proofs for Confidential Transactions and More
+Exploring Elliptic Curve Pairing - Vitalik Buterin
+BLS12-381 For The Rest of Us - Ben Edgington
+Poly-commits: Pairing &amp; Discrete Log - Cryptonotes
+Detail Background Group A Group is a set $\mathbb{G}$ and an operation $*$ with these properties:"><meta itemprop="datePublished" content="2024-05-15T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2025-03-28T00:00:22+07:00" />
+<meta itemprop="wordCount" content="1967">
+<meta itemprop="keywords" content="Learning,ZKP," />
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.e562d763c6d0825495eb17de8b2c1d9800cf7c08db1c36accedf77a5fccfc4b9.css" integrity="sha256-5WLXY8bQglSV6xfeiywdmADPfAjbHDaszt93pfzPxLk=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.ba38eba94cb47fef9936258c42d11ff19fa9686a30b38e783773fe3f15eb44dc.css" integrity="sha256-ujjrqUy0f&#43;&#43;ZNiWMQtEf8Z&#43;paGows454N3P&#43;PxXrRNw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem - Giap&#39;s Blog</title>
+  
+
+  
+  <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem"/>
+<meta name="twitter:description" content="In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants.
+Resources A Zero-Knowledge Version of vSQL
+Bulletproofs: Short Proofs for Confidential Transactions and More
+Exploring Elliptic Curve Pairing - Vitalik Buterin
+BLS12-381 For The Rest of Us - Ben Edgington
+Poly-commits: Pairing &amp; Discrete Log - Cryptonotes
+Detail Background Group A Group is a set $\mathbb{G}$ and an operation $*$ with these properties:"/>
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.be779f459ad7e3aaf8afd0f80c6a61ca6c50993f5f18512532100ac6d93f0fa9.css" integrity="sha256-vnefRZrX46r4r9D4DGphymxQmT9fGFElMhAKxtk/D6k=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="https://michaelneuper.github.io/">Giap&#39;s Blog</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+        <span class="icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17,11H16a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm0,4H16a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2ZM11,9h6a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2ZM21,3H7A1,1,0,0,0,6,4V7H3A1,1,0,0,0,2,8V18a3,3,0,0,0,3,3H18a4,4,0,0,0,4-4V4A1,1,0,0,0,21,3ZM6,18a1,1,0,0,1-2,0V9H6Zm14-1a2,2,0,0,1-2,2H7.82A3,3,0,0,0,8,18V5H20Zm-9-4h1a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2Zm0,4h1a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2Z"/></svg>
+</span>
+      
+      <a class="link" href="/posts/">Blog</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+        <span class="icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+<path d="M10.07031,20.50291a1.00008,1.00008,0,0,0-1.18115-.9834c-1.30908.24024-2.96191.27637-3.40137-.958a5.70754,5.70754,0,0,0-1.83691-2.415,1.20073,1.20073,0,0,1-.1665-.10938,1,1,0,0,0-.93067-.64551H2.54883a.99965.99965,0,0,0-1,.99512c-.00391.81543.811,1.33789,1.1416,1.51465a4.4408,4.4408,0,0,1,.92383,1.35937c.36426,1.02344,1.42285,2.57617,4.46582,2.376.001.03516.00195.06836.00244.09863l.00439.26758a1,1,0,0,0,2,0l-.00488-.31836C10.07715,21.4951,10.07031,21.22068,10.07031,20.50291Zm10.667-15.126c.03174-.125.063-.26367.09034-.41992a6.27792,6.27792,0,0,0-.40821-3.293,1.002,1.002,0,0,0-.61572-.58007c-.356-.12012-1.67041-.35645-4.18408,1.25a13.86918,13.86918,0,0,0-6.354,0C6.76221.751,5.45459.9658,5.10205,1.07908a.99744.99744,0,0,0-.63135.584,6.3003,6.3003,0,0,0-.40332,3.35644c.02442.12793.05078.2461.07813.35449A6.26928,6.26928,0,0,0,2.89014,9.20311a8.42168,8.42168,0,0,0,.04248.92187c.334,4.60254,3.334,5.98438,5.42431,6.459-.04345.125-.083.25878-.11816.40039a1.00023,1.00023,0,0,0,1.94238.47851,1.6784,1.6784,0,0,1,.46778-.87793.99947.99947,0,0,0-.5459-1.74512c-3.4541-.39453-4.95362-1.80175-5.1792-4.89843a6.61076,6.61076,0,0,1-.03369-.73828,4.25769,4.25769,0,0,1,.91943-2.71289,3.022,3.022,0,0,1,.1958-.23145.99988.99988,0,0,0,.188-1.02441,3.3876,3.3876,0,0,1-.15527-.55567A4.09356,4.09356,0,0,1,6.1167,3.06346a7.54263,7.54263,0,0,1,2.415,1.17968,1.00877,1.00877,0,0,0,.82764.13282,11.77716,11.77716,0,0,1,6.17285.001,1.00549,1.00549,0,0,0,.83056-.13769,7.572,7.572,0,0,1,2.40528-1.19043,4.03977,4.03977,0,0,1,.0874,1.57812,3.205,3.205,0,0,1-.16895.60743.9999.9999,0,0,0,.188,1.02441c.07715.08691.1543.18066.22363.26855A4.12186,4.12186,0,0,1,20,9.20311a7.03888,7.03888,0,0,1-.0376.77734c-.22021,3.05566-1.72558,4.46387-5.1958,4.85937a1,1,0,0,0-.54541,1.7461,1.63079,1.63079,0,0,1,.46631.9082,3.06079,3.06079,0,0,1,.09229.81934v2.334C14.77,21.2949,14.77,21.78025,14.77,22.00291a1,1,0,1,0,2,0c0-.2168,0-.69238.00977-1.33984V18.31346a4.8815,4.8815,0,0,0-.15479-1.31153,4.25638,4.25638,0,0,0-.11621-.416,6.51258,6.51258,0,0,0,5.44531-6.42383A8.69677,8.69677,0,0,0,22,9.20311,6.13062,6.13062,0,0,0,20.7373,5.37693Z"/></svg>
+</span>
+      
+      <a class="link" href="https://github.com/Giapppp">GitHub</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem</h1>
+    <div class="publish-metadata">
+      
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      15 May 2024
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          1967 words
+        </span>
+      
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~10 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  <div>
+    
+    <a class="link tag" href='https://michaelneuper.github.io/tags/learning'>#Learning</a>
+    
+    <a class="link tag" href='https://michaelneuper.github.io/tags/zkp'>#ZKP</a>
+    
+    <br></br>
+  </div>
+  
+  
+  
+  <details>
+    <summary>
+      <b>Table of Contents</b>
+    </summary>
+    <div class="toc numbered-subtitles"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#detail">Detail</a>
+      <ul>
+        <li><a href="#background">Background</a>
+          <ul>
+            <li><a href="#group">Group</a></li>
+            <li><a href="#generator">Generator</a></li>
+            <li><a href="#discrete-logarithm-assumption">Discrete Logarithm Assumption</a></li>
+            <li><a href="#diffie-hellman-assumption">Diffie-Hellman Assumption</a></li>
+            <li><a href="#bilinear-pairing">Bilinear pairing</a>
+              <ul>
+                <li><a href="#example-decisional-diffie-hellman">Example: Decisional Diffie-Hellman</a></li>
+                <li><a href="#example-bls-signature">Example: BLS signature</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#kzg-polynomial-commitment-scheme">KZG Polynomial Commitment Scheme</a>
+          <ul>
+            <li><a href="#q-strong-bilinear-diffie-hellman">q-Strong Bilinear Diffie-Hellman</a></li>
+            <li><a href="#knowledge-of-exponent-koe">Knowledge of Exponent (KoE)</a></li>
+            <li><a href="#generic-group-model-ggm">Generic group model (GGM)</a></li>
+            <li><a href="#property-of-the-kzg-poly-commit">Property of the KZG poly-commit</a></li>
+            <li><a href="#ceremony">Ceremony</a></li>
+          </ul>
+        </li>
+        <li><a href="#variants-of-kzg-poly-commit">Variants of KZG poly-commit</a>
+          <ul>
+            <li><a href="#multivariate-poly-commit">Multivariate poly-commit</a></li>
+            <li><a href="#achieving-zero-knowledge">Achieving zero-knowledge</a></li>
+            <li><a href="#batch-opening-single-polynomial">Batch opening: single polynomial</a></li>
+            <li><a href="#batch-opening-multiple-polynomials">Batch opening: multiple polynomials</a></li>
+          </ul>
+        </li>
+        <li><a href="#polynomial-commitments-based-on-discrete-logarithm">Polynomial commitments based on discrete logarithm</a>
+          <ul>
+            <li><a href="#bulletproofs">Bulletproofs</a></li>
+            <li><a href="#properties-of-bulletproofs">Properties of Bulletproofs</a></li>
+            <li><a href="#other-protocols">Other protocols</a>
+              <ul>
+                <li><a href="#hyrax-wahby-tzialla-shelat-thaler-walfish18httpseprintiacrorg20171132pdf">Hyrax <a href="https://eprint.iacr.org/2017/1132.pdf">Wahby-Tzialla-Shelat-Thaler-Walfish'18</a></a></li>
+              </ul>
+            </li>
+            <li><a href="#dory-lee21httpseprintiacrorg20201274">Dory <a href="https://eprint.iacr.org/2020/1274">Lee'21</a></a></li>
+            <li><a href="#dark-bünz-fisch-szepieniec20httpseprintiacrorg20191229">Dark <a href="https://eprint.iacr.org/2019/1229">Bünz-Fisch-Szepieniec'20</a></a></li>
+          </ul>
+        </li>
+        <li><a href="#summary">Summary</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  </details>
+  
+  
+  <article class="content numbered-subtitles">
+    
+    <p>In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants.</p>
+<h2 id="resources">Resources</h2>
+<p><a href="https://eprint.iacr.org/2017/1146">A Zero-Knowledge Version of vSQL</a></p>
+<p><a href="https://eprint.iacr.org/2017/1066.pdf">Bulletproofs: Short Proofs for Confidential Transactions and More</a></p>
+<p><a href="https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627">Exploring Elliptic Curve Pairing - Vitalik Buterin</a></p>
+<p><a href="https://hackmd.io/@benjaminion/bls12-381">BLS12-381 For The Rest of Us - Ben Edgington</a></p>
+<p><a href="https://crypto-notes-erhant.vercel.app/zklearning/poly-commits-on-pairings-with-dlog.html#kzg-poly-commit-scheme-with-pairings">Poly-commits: Pairing &amp; Discrete Log - Cryptonotes</a></p>
+<h2 id="detail">Detail</h2>
+<h3 id="background">Background</h3>
+<h4 id="group">Group</h4>
+<p><strong>A Group</strong> is a set $\mathbb{G}$ and an operation $*$ with these properties:</p>
+<ul>
+<li>
+<p><strong>Closure</strong>: For all $a, b \in \mathbb{G}$, $a * b \in G$</p>
+</li>
+<li>
+<p><strong>Associativity</strong>: For all $a, b, c \in \mathbb{G}$, $(a * b) * c = a * (b * c)$</p>
+</li>
+<li>
+<p><strong>Identity</strong>: There exists a unique element $e \in \mathbb{G}$ such that for every $a \in \mathbb{G}$, $e * a = a * e = a$</p>
+</li>
+<li>
+<p><strong>Inverse</strong>: For each $a \in \mathbb{G}$, there exists $b \in \mathbb{G}$ such that $a * b = b * a = e$</p>
+</li>
+</ul>
+<p>For example, $\mathbb{Z}$ under addition, $\mathbb{F}_p$ under multiplication and elliptic curves are group</p>
+<h4 id="generator">Generator</h4>
+<p><strong>Generator</strong> is an element $g \in G$ that generates all elements in the group by taking all powers of $g$.</p>
+<p>For example, with $\mathbb{Z}^*_7 = \lbrace 1, 2, 3, 4, 5, 6 \rbrace$, $3$ is a generator, because $3^1 = 3, 3^2 = 2, 3^3 = 6, 3^4 = 4, 3^5 = 5, 3^6 = 1 \mod 7$.</p>
+<h4 id="discrete-logarithm-assumption">Discrete Logarithm Assumption</h4>
+<p>Let $\mathbb{G}$ is a group with generator $g$, so we can represent $\mathbb{G} = \lbrace g, g^2,&hellip;,g^{p-1} \rbrace$. The <strong>discrete logarithm problem</strong> is, given $y \in \mathbb{G}$, we need to find $x$ such that $g^x = y$.</p>
+<p>It turns out that this is very hard to do. There are some methods to solve this problem like Bruteforce, <a href="https://en.wikipedia.org/wiki/Baby-step_giant-step">Baby-Step Giant-Step</a>, <a href="https://en.wikipedia.org/wiki/Pohlig%E2%80%93Hellman_algorithm">Pohlig-Hellman</a>, <a href="https://crypto.stackexchange.com/questions/52673/why-does-smarts-attack-only-work-on-anomalous-curves">Smart&rsquo;s attack</a>,&hellip; but all of them need some special requirements, so people consensus that this problem is <strong>computationally hard</strong>.</p>
+<h4 id="diffie-hellman-assumption">Diffie-Hellman Assumption</h4>
+<p>Diffie-Hellman Key-Exchange is familiar with us, and that is based on the Diffie-Hellman Assumption, which is very similar to the discrete logarithm assumption: given $\mathbb{G}, g, g^x, g^y$, compute $g^{xy}$.</p>
+<p>This is a stronger assumption than the discrete logarithm assumption. If someone can solve discrete logarithm problem, they can easily break this assumption by calculate $x$ from $g^x$ (or $y$ from $g^y$), then calculate $g^{xy}$.</p>
+<p>This is also a hard problem and there is no efficient solution yet.</p>
+<h4 id="bilinear-pairing">Bilinear pairing</h4>
+<p>Let&rsquo;s talk about <strong>bilinear pairing</strong>. We have the following:</p>
+<ul>
+<li>$\mathbb{G}, \mathbb{G}_T$ are both multiplicative cyclic group of order $p$, where $\mathbb{G}$ is the base group with generator $g$, and $\mathbb{G}_T$ is the target group.
+Both $\mathbb{G}, \mathbb{G}_T$ have order $p$.</li>
+<li>$e$ is a <strong>pairing</strong> operation, it is the map $e: \mathbb{G} \times \mathbb{G} \to \mathbb{G}_T$.</li>
+</ul>
+<p>We are interested with the <strong>bilinearity</strong> property: $$\forall P, Q \in \mathbb{G}: e(P^x, Q^y) = e(P, Q^y)^x = e(P^x, Q)^y = e(P, Q)^{xy}$$</p>
+<p>Note that computing $e$ itself maybe efficient or not, depends on the groups that are being used; and also note that we can use two different base groups.</p>
+<h5 id="example-decisional-diffie-hellman">Example: Decisional Diffie-Hellman</h5>
+<p>Given $g^x$ and $g^y$, a pairing can check that some element $h = g^{xy}$ without knowing $x$ and $y$.</p>
+<h5 id="example-bls-signature">Example: BLS signature</h5>
+<p><a href="https://www.iacr.org/archive/asiacrypt2001/22480516.pdf">BLS signature</a> is a good example of using pairing. It&rsquo;s a signature scheme with these functions:</p>
+<ul>
+<li>$keygen(p, \mathbb{G}, g, \mathbb{G}_T, e) \to (sk = x, pk = g^x)$ is the secret key and public key, respectively.</li>
+<li>$sign(sk, m) \to \sigma = H(m)^x$ where $H$ is a cryptographic hash function that maps the message space to $\mathbb{G}$.</li>
+<li>$verify(pk, \sigma, m) \to \lbrace 0, 1 \rbrace$ will verify if $e(H(m), g^x) = e(\sigma, g)$. Notice that $g^x$ comes to $pk$, and $H$ is a known public hash function.</li>
+</ul>
+<h3 id="kzg-polynomial-commitment-scheme">KZG Polynomial Commitment Scheme</h3>
+<p>We discussed about KZG in previous post, but because we are talking about pairing, we will dig deeper about KZG Poly-commit Scheme.</p>
+<p>Suppose you have a univariate polynomial function family $\mathcal{F} = \mathbb{F}_p^{\le d}[X]$ and a polynomial you would like to commit $f \in \mathcal{F}$. You also have a bilinear pairing $p, \mathbb{G}, q, \mathbb{G}_T, e$. Let see how KZG works with these.</p>
+<ul>
+<li>
+<p>$keygen(\lambda, \mathcal{F}) \to gp$</p>
+<ul>
+<li>Sample a random $\tau \in \mathbb{F}_p$</li>
+<li>Set $gp = (g, g^\tau, g^{\tau^2},&hellip;,g^{\tau^d})$</li>
+<li>Delete $\tau$. If it still exists now, malicious user can generate fake proofs. This is why a <strong>trusted setup</strong> is required for KZG.</li>
+</ul>
+</li>
+<li>
+<p>$commit(gp, f) \to comm_f$</p>
+<ul>
+<li>The polynomial is represented with its coefficients $f(x) = f_0 + f_1x + f_2x^2 + &hellip; + f_dx^d$</li>
+<li>The commitment $comm_f = g^{f(\tau)}$. We don&rsquo;t know $\tau$, but by $gp$, we can calculate $comm_f = g^{f_ 0 + f_1 \tau + f_2 \tau^2 + &hellip; + f_d \tau^d} = g^{f_0} \times (g^\tau)^{f_1} \times (g^{\tau^2})^{f_2} \times &hellip; \times (g^{\tau^d})^{f_d}$</li>
+</ul>
+</li>
+<li>
+<p>$eval(gp, f, u) \to v, \pi$</p>
+<ul>
+<li>A verifier want to query this polynomial at point $u$, and you would like to show that $f(u) = v$ along with a proof $\pi$ that this is indeed true.</li>
+<li>We need to compute quotient polynomial $q(x)$ and $\pi = g^{q(\tau)}$ by using $gp$. $q(x)$ need to satisfy that $f(x) - f(u) = (x - u)q(x)$ and note that $u$ is a root of $f(x) - f(u)$.</li>
+</ul>
+</li>
+<li>
+<p>$verify(gp, comm_f, u, v, \pi) \to \lbrace 0, 1 \rbrace$</p>
+<ul>
+<li>The idea is check the equation at point $\tau: g^{f(\tau) - f(u)} = g^{(\tau - u)q(\tau)}$ (1).</li>
+<li>But we only know $g^{\tau - u}$ and $g^{q(\tau)}$. By Diffie-Hellman assumption, calculate $g^{(\tau - u)q(\tau)}$ from $g^{\tau - u}$ and $g^{q(\tau)}$ is very hard. That&rsquo;s where pairing need to!</li>
+<li>We can use pairing to calculate $e(comm_f/g^v, g)$ and $e(g^{\tau - u}, \pi)$ and check they are equal or not. If it&rsquo;s equal, then we know (1) is correct because $e(g, g)^{f(\tau) - f(u)} = e(g, g)^{(\tau - u)q(\tau)}\iff f(x) - f(u) = (x - u)q(x)$ (assume that $e(g, g) \ne 0, 1$).</li>
+</ul>
+</li>
+</ul>
+<h4 id="q-strong-bilinear-diffie-hellman">q-Strong Bilinear Diffie-Hellman</h4>
+<p>The <strong>q-Strong Bilinear Diffie-Hellman (q-SBDH)</strong> assumption is, given $(p, \mathbb{G}, g, \mathbb{G}_T, e), gp = (g, g^\tau, g^{\tau^2},&hellip;,g^{\tau})$, it is <strong>computationally hard</strong> to compute $e(g, g)^{\frac{1}{\tau - u}}$ for any $u$.</p>
+<p>Remember two properties of KZG ? They are:</p>
+<ul>
+<li><strong>Correctness</strong>: If the prover is honest, then the verifier will always accept.</li>
+<li><strong>Soundness</strong>: How likely is a fake proof to be verified?</li>
+</ul>
+<p>We can see proof of soundness in the lecture:</p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp5/zkp5_1.png" alt="Image alt"></p>
+<h4 id="knowledge-of-exponent-koe">Knowledge of Exponent (KoE)</h4>
+<p>How we can assume the prover knows $f$ such that $comm_f = g^{f(\tau)}$ ? Here is how:</p>
+<ul>
+<li>$gp = (g, g^\tau, g^{\tau^2},&hellip;,g^{\tau})$</li>
+<li>Sample some random $\alpha$ and compute $gp^\alpha = (g^\alpha, g^{\alpha \tau}, g^{\alpha \tau^2},&hellip;,g^{\alpha \tau^d})$</li>
+<li>Compute two commitments instead of one, $comm_f = g^{f(\tau)}$ and $comm_f&rsquo; = g^{\alpha f(\tau)}$</li>
+</ul>
+<p>With bilinear pairing, if $e(comm_f, g^\alpha) = e(comm_f&rsquo;, g)$ there exists an extractor $E$ that extracts $f$ such that $comm_f = g^{f(\tau)}$. This extractor will extract $f$ in our proof above, where we assumed the prover knows $f$.</p>
+<p>So, let&rsquo;s describe KZG with knowledge soundness:</p>
+<ul>
+<li><strong>Keygen</strong>: $gp$ include both $(g, g^\tau, g^{\tau^2},&hellip;,g^{\tau})$ and $(g^\alpha, g^{\alpha \tau}, g^{\alpha \tau^2},&hellip;,g^{\alpha \tau^d})$</li>
+<li><strong>Commit</strong>: $comm_f = g^{f(\tau)}, comm_f&rsquo; = g^{\alpha f(\tau)}$</li>
+<li><strong>Verify</strong>: checks $e(comm_f, g^\alpha) = e(comm_f&rsquo;, g)$</li>
+<li><strong>Knowledge soundness proof</strong>: Extract $f$ in the first step by the KoE assumption.</li>
+</ul>
+<h4 id="generic-group-model-ggm">Generic group model (GGM)</h4>
+<ul>
+<li>
+<p>In informal definition, adversary is only give an oracle to compute the group operation, like given $(g, g^\tau, g^{\tau^2},&hellip;,g^{\tau^d})$, adversary can only compute their linear combinations.</p>
+</li>
+<li>
+<p>GGM can replace the KoE assumption and reduce the commitment size in KZG.</p>
+</li>
+</ul>
+<h4 id="property-of-the-kzg-poly-commit">Property of the KZG poly-commit</h4>
+<ul>
+<li><strong>Keygen</strong>: trusted setup!</li>
+<li><strong>Commit</strong>: $\mathcal{O}(d)$ group exponentiations, $\mathcal{O}(1)$ commitment size</li>
+<li><strong>Eval</strong>: $\mathcal{O}(d)$ group exponentiations, and quotient $q(x)$ can be computed efficiently in linear time</li>
+<li><strong>Proof size</strong>: $\mathcal{O}(1)$, 1 group element</li>
+<li><strong>Verifier time</strong>: $\mathcal{O}(1)$, 1 pairing</li>
+</ul>
+<h4 id="ceremony">Ceremony</h4>
+<p>To relax the trusted setup in practice, there is a process called <strong>ceremony</strong>. The goal of ceremony is to have a distributed generation of the global parameters so that no one can reconstruct the trapdoor if at least one of the participants is honest and discards their secrets. Here is how to do it:</p>
+<ul>
+<li>Suppose your global parameters are $gp = (g^{\tau}, g^{\tau^2},&hellip;,g^{\tau^d}) = (g_1, g_2, &hellip;, g_d)$</li>
+<li>As a participant in this ceremony, you sample random $s$ and update $gp&rsquo; = (g_1&rsquo;, g_2&rsquo;, &hellip;, g_d&rsquo;) = (g_1^s, g_2^{s^2},&hellip;,g_d^{s^d}) = (g^{\tau s}, g^{(\tau s)^2}, &hellip;,g^{(\tau s)^d})$ with secret $\tau s$</li>
+<li>Check the correntness of $gp'$</li>
+</ul>
+<ul>
+<li>The contributor knows $s$ such that $g_1&rsquo; = (g_1)^s$</li>
+<li>$gp&rsquo;$ consists of consecutive powers $e(g_i&rsquo;, g_1&rsquo;) = e(g_{i+1}&rsquo;, g)$ and $g_1&rsquo; \ne 1$
+To know more, check <a href="https://eprint.iacr.org/2022/1592.pdf">Nikolaenko-Ragsdale-Bonneau-Boneh'22</a>.</li>
+</ul>
+<h3 id="variants-of-kzg-poly-commit">Variants of KZG poly-commit</h3>
+<h4 id="multivariate-poly-commit">Multivariate poly-commit</h4>
+<p>This was described first in <a href="https://eprint.iacr.org/2011/587.pdf">Papamanthou-Shi-Tamassia'13</a>. In this paper, they explains a way to use KZG for multivariate polynomial. The key idea is: $$f(x_1, &hellip;, x_k) - f(u_1, &hellip;, u_k) = \sum_{i=1}^k(x_i - u_i)q_i(\overrightarrow{x})$$</p>
+<p>We have these properties:</p>
+<ul>
+<li><strong>Keygen</strong>: sample $\tau_1, \tau_2,&hellip;,\tau_k$, compute $gp$ as $g$ raised to all possible monomials of $\tau_1, \tau_2,&hellip;,\tau_k$</li>
+<li><strong>Commit</strong>: $comm_f = g^{f(\tau_1, \tau_2,&hellip;,\tau_k)}$</li>
+<li><strong>Eval</strong>: compute $\pi_i = g^{q_i(\overrightarrow{x})}$</li>
+<li><strong>Verify</strong>: $e(comm_f/g^v, g) = \prod_{i=1}^ke(g^{\tau_i - u_i}, \pi_i)$</li>
+</ul>
+<h4 id="achieving-zero-knowledge">Achieving zero-knowledge</h4>
+<p>Plain KZG is not zero-knowledge, e.g. $comm_f = g^{f(\tau)} is deterministic. Also remember that to formally show zero-knowledgeness, we need a simulator construction that can simulate the view of the commitment scheme.</p>
+<p><a href="https://home.cse.ust.hk/~dipapado/docs/vram.pdf">ZGKPP'18</a> shows a method to do this by masking with randomizers.</p>
+<ul>
+<li><strong>Commit</strong>: $comm_f = g^{f(\tau) + r \eta}$</li>
+<li><strong>Eval</strong>: $f(x) + ry - f(u) = (x - u)(q(x) + r&rsquo;y) + y(r - r&rsquo;(x - u))$, and the proof will be $\pi = g^{q(\tau) + r&rsquo;\eta}, g^{r - r&rsquo;(\tau - u)}$.</li>
+</ul>
+<h4 id="batch-opening-single-polynomial">Batch opening: single polynomial</h4>
+<p>Prover wants to prove $f$ at $u_1,&hellip;,u_m$ for $m &lt; d$. The key idea is:</p>
+<ul>
+<li>Extrapolate $f(u_1), f(u_2),&hellip;,f(u_m)$ to obtain $h(x)$.</li>
+<li>Find a quotient polynomial from $f(x) - h(x) = \prod _{i=1}^m(x-u_i)q(x)$</li>
+<li>The proof then becomes $\pi = g^{q(\tau)}$</li>
+<li>Now, the verifier will check $e(comm_f/g^{h(\tau)}, g) = e(g^{\prod _{i=1}^m(x-u_i)}, \pi)$</li>
+</ul>
+<h4 id="batch-opening-multiple-polynomials">Batch opening: multiple polynomials</h4>
+<p>Prover wants to prove $f_i(u_{i, j}) = v_{i, j}$ for $i \in [n], j \in [m]$. The key idea is:</p>
+<ul>
+<li>Extrapolate $f_i(u_1), &hellip;, f_i(u_m)$ to get $h_i(x)$ for $i \in [n]$</li>
+<li>Find quotient polynomials from $f_i(x) - h_i(x) = \prod_{i=1}^m(x - u_m)q_i(x)$</li>
+<li>Combine all $q_i(x)$ via a random linear combination.</li>
+</ul>
+<h3 id="polynomial-commitments-based-on-discrete-logarithm">Polynomial commitments based on discrete logarithm</h3>
+<h4 id="bulletproofs">Bulletproofs</h4>
+<p>Although KZG polynomial commitment is very effective, but require trusted setup is still a problem to solve. <strong>Bulletproofs</strong>[<a href="https://eprint.iacr.org/2016/263.pdf">BCCGP'16</a>], [<a href="https://eprint.iacr.org/2017/1066.pdf">BBBPWM'18</a>] is one of proof schemes without trusted setup.</p>
+<p><strong>$keygen$</strong>: Bulletproofs have a transparent setup, which sample random $gp = (g_0, g_1, &hellip;, g_d)$ in $\mathbb{G}$
+<strong>$commit(gp, f) \to comm_f$</strong>: Suppose you want to commit $f(x) = f_0 + f_1x + f_2x^2 + &hellip; + f_dx^d$, then your commitment will be $comm_f = g_0^{f_0}g_1^{f_1}g_2^{f_2}&hellip;g_d^{f_d}. Notice that this is a &ldquo;vector commitment&rdquo; version of a Pedersen Commitment
+<strong>$eval(gp, f, u)$</strong>:</p>
+<ul>
+<li>Find $v = f(u)$</li>
+<li>Compute $L, R, v_L, v_R$, where $L, R$ are commitments of left half and right half of polynomial.</li>
+<li>Receive a random $r$ from verifier and reduce $f$ to $f&rsquo;$ of degree $d/2$</li>
+<li>Upgrade the bases $gp&rsquo;$
+<strong>$verify(gp, comm_f, u, v, \pi)$</strong>:</li>
+<li>Check $v = v_L + v_R * u^{d/2}</li>
+<li>Generate $r$ randomly</li>
+<li>Update $comm&rsquo; = L^r * comm_f * R^{r^{-1}}$ (magic trick)</li>
+<li>Update the global parameter to be $gp'$</li>
+<li>Set $v&rsquo; = rv_L + r_R$
+Note that we do $eval$ and $verify$ recursively around $\log d$ times.
+The idea of Bulletproofs is to recursively divide a polynomial in two polynomials, and commit to those smaller polynomials.</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp5/zkp5_2.png" alt="Image alt"></p>
+<h4 id="properties-of-bulletproofs">Properties of Bulletproofs</h4>
+<ul>
+<li><strong>Keygen</strong>: $\mathcal{O}(d)$, transparent setup</li>
+<li><strong>Commit</strong>: $\mathcal{O}(d)$ group exponentiations, $\mathcal{O}(1)$ commitment size</li>
+<li><strong>Eval</strong>: $\mathcal{O}(d)$ group exponentiations (non-interactive via Fiat-Shamir)</li>
+<li><strong>Proof size</strong>: $\mathcal{O}(\log d)$</li>
+<li><strong>Verifier time</strong>: $\mathcal{O}(d)$</li>
+</ul>
+<h4 id="other-protocols">Other protocols</h4>
+<h5 id="hyrax-wahby-tzialla-shelat-thaler-walfish18httpseprintiacrorg20171132pdf">Hyrax <a href="https://eprint.iacr.org/2017/1132.pdf">Wahby-Tzialla-Shelat-Thaler-Walfish'18</a></h5>
+<ul>
+<li>
+<p>Improves the verifier time to $\mathcal{O}(\sqrt{d})$ by representing the coefficients as a 2-D matrix.</p>
+</li>
+<li>
+<p>Proof size: $\mathcal{O}(\sqrt{d})$.</p>
+</li>
+</ul>
+<h4 id="dory-lee21httpseprintiacrorg20201274">Dory <a href="https://eprint.iacr.org/2020/1274">Lee'21</a></h4>
+<ul>
+<li>
+<p>Improving verifier time to $\mathcal{O}(\log d)$.</p>
+</li>
+<li>
+<p>The key idea is delegating the structured verifier computation to the prover using inner pairing product arguments [<a href="https://eprint.iacr.org/2019/1177.pdf">BMMTV'21</a>].</p>
+</li>
+<li>
+<p>Also improves the prover time to $\mathcal{O}(\sqrt{d})$ exponentiations plus $\mathcal{O}(d)$ field operations.</p>
+</li>
+</ul>
+<h4 id="dark-bünz-fisch-szepieniec20httpseprintiacrorg20191229">Dark <a href="https://eprint.iacr.org/2019/1229">Bünz-Fisch-Szepieniec'20</a></h4>
+<ul>
+<li>
+<p>Achieves $\mathcal{O}(\log d)$ proof size and verifier time</p>
+</li>
+<li>
+<p>Group of unknown order</p>
+</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp5/zkp5_3.png" alt="Image alt"></p>
+
+    
+  </article>
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  
+
+<div id="sharingbuttons">
+    
+    
+    <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Zero%20Knowledge%20Proof%3a%20Polynomial%20Commitments%20based%20on%20Pairing%20and%20Discrete%20Log%20Problem&amp;url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="mailto:?subject=Zero%20Knowledge%20Proof%3a%20Polynomial%20Commitments%20based%20on%20Pairing%20and%20Discrete%20Log%20Problem&amp;body=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f" target="_self" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM7.25 14.43l-3.5 2c-.08.05-.17.07-.25.07-.17 0-.34-.1-.43-.25-.14-.24-.06-.55.18-.68l3.5-2c.24-.14.55-.06.68.18.14.24.06.55-.18.68zm4.75.07c-.1 0-.2-.03-.27-.08l-8.5-5.5c-.23-.15-.3-.46-.15-.7.15-.22.46-.3.7-.14L12 13.4l8.23-5.32c.23-.15.54-.08.7.15.14.23.07.54-.16.7l-8.5 5.5c-.08.04-.17.07-.27.07zm8.93 1.75c-.1.16-.26.25-.43.25-.08 0-.17-.02-.25-.07l-3.5-2c-.24-.13-.32-.44-.18-.68s.44-.32.68-.18l3.5 2c.24.13.32.44.18.68z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f&amp;resubmit=true&amp;title=Zero%20Knowledge%20Proof%3a%20Polynomial%20Commitments%20based%20on%20Pairing%20and%20Discrete%20Log%20Problem" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 11.5c0-1.65-1.35-3-3-3-.96 0-1.86.48-2.42 1.24-1.64-1-3.75-1.64-6.07-1.72.08-1.1.4-3.05 1.52-3.7.72-.4 1.73-.24 3 .5C17.2 6.3 18.46 7.5 20 7.5c1.65 0 3-1.35 3-3s-1.35-3-3-3c-1.38 0-2.54.94-2.88 2.22-1.43-.72-2.64-.8-3.6-.25-1.64.94-1.95 3.47-2 4.55-2.33.08-4.45.7-6.1 1.72C4.86 8.98 3.96 8.5 3 8.5c-1.65 0-3 1.35-3 3 0 1.32.84 2.44 2.05 2.84-.03.22-.05.44-.05.66 0 3.86 4.5 7 10 7s10-3.14 10-7c0-.22-.02-.44-.05-.66 1.2-.4 2.05-1.54 2.05-2.84zM2.3 13.37C1.5 13.07 1 12.35 1 11.5c0-1.1.9-2 2-2 .64 0 1.22.32 1.6.82-1.1.85-1.92 1.9-2.3 3.05zm3.7.13c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9.8 4.8c-1.08.63-2.42.96-3.8.96-1.4 0-2.74-.34-3.8-.95-.24-.13-.32-.44-.2-.68.15-.24.46-.32.7-.18 1.83 1.06 4.76 1.06 6.6 0 .23-.13.53-.05.67.2.14.23.06.54-.18.67zm.2-2.8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm5.7-2.13c-.38-1.16-1.2-2.2-2.3-3.05.38-.5.97-.82 1.6-.82 1.1 0 2 .9 2 2 0 .84-.53 1.57-1.3 1.87z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="whatsapp://send?text=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.1 3.9C17.9 1.7 15 .5 12 .5 5.8.5.7 5.6.7 11.9c0 2 .5 3.9 1.5 5.6L.6 23.4l6-1.6c1.6.9 3.5 1.3 5.4 1.3 6.3 0 11.4-5.1 11.4-11.4-.1-2.8-1.2-5.7-3.3-7.8zM12 21.4c-1.7 0-3.3-.5-4.8-1.3l-.4-.2-3.5 1 1-3.4L4 17c-1-1.5-1.4-3.2-1.4-5.1 0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.7 2.8 1.8 1.8 2.8 4.2 2.8 6.7-.1 5.2-4.3 9.4-9.5 9.4zm5.1-7.1c-.3-.1-1.7-.9-1.9-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.4c-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6s.3-.3.4-.5c.2-.1.3-.3.4-.5.1-.2 0-.4 0-.5C10 9 9.3 7.6 9 7c-.1-.4-.4-.3-.5-.3h-.6s-.4.1-.7.3c-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.3-.3-.4-.6-.5z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f&amp;t=Zero%20Knowledge%20Proof%3a%20Polynomial%20Commitments%20based%20on%20Pairing%20and%20Discrete%20Log%20Problem" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path fill-rule="evenodd" d="M60.94 82.314L17 0h20.08l25.85 52.093c.397.927.86 1.888 1.39 2.883.53.994.995 2.02 1.393 3.08.265.4.463.764.596 1.095.13.334.262.63.395.898.662 1.325 1.26 2.618 1.79 3.877.53 1.26.993 2.42 1.39 3.48 1.06-2.254 2.22-4.673 3.48-7.258 1.26-2.585 2.552-5.27 3.877-8.052L103.49 0h18.69L77.84 83.308v53.087h-16.9v-54.08z"></path></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Zero%20Knowledge%20Proof%3a%20Polynomial%20Commitments%20based%20on%20Pairing%20and%20Discrete%20Log%20Problem&amp;url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp5%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.707 8.475C.275 8.64 0 9.508 0 9.508s.284.867.718 1.03l5.09 1.897 1.986 6.38a1.102 1.102 0 0 0 1.75.527l2.96-2.41a.405.405 0 0 1 .494-.013l5.34 3.87a1.1 1.1 0 0 0 1.046.135 1.1 1.1 0 0 0 .682-.803l3.91-18.795A1.102 1.102 0 0 0 22.5.075L.706 8.475z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+</div>
+  <div class="paginator">
+    
+    <a class="link" href="https://michaelneuper.github.io/posts/zkp4/" title="Zero Knowledge Proof: The PLONK SNARK">← prev</a>
+    
+    
+    <a class="link" href="https://michaelneuper.github.io/posts/zkp6/" title="Zero Knowledge Proof: Polynomial Commitments based on Error-correcting Codes">next →</a>
+    
+  </div>
+  <div class="comment">
+    
+    
+    
+    <script src="https://giscus.app/client.js"
+    data-repo="michaelneuper/hugo-texify3"
+    data-repo-id="R_kgDOIjPNaQ"
+    data-category="General"
+    data-category-id="DIC_kwDOIjPNac4CaklA"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme=""
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+</script>
+
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div>
+    <span>Powered by  <a class=link href=https://gohugo.io target=_blank rel=noopener>Hugo</a> | 
+Theme <a class=link href=https://github.com/michaelneuper/hugo-texify3 target=_blank rel=noopener>TeXify3</a>
+</span>
+  </div>
+  <div>
+    <span>Copyright © 2025 Michael Neuper</span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='https://michaelneuper.github.io/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

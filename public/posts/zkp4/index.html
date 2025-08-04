@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="Michael Neuper">
+
+  
+  
+  <meta name="description" content="In this posts, we will construct a widely used SNARK called PLONK
+Resources PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge
+Feist-Khovratovich technique for computing KZG proofs fast
+Cryptonotes - Erhant
+Detail Recall: Polynomial Commitment If you don&rsquo;t know anything about polynomial commitment, I suggest reading my previous post. Here is a short explanation about what they are:
+The prover would like to commit to some polynomial $f \in \mathbb{F}_p^{\le d}[X]$">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="https://michaelneuper.github.io//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://michaelneuper.github.io//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://michaelneuper.github.io//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:title" content="Zero Knowledge Proof: The PLONK SNARK" />
+<meta property="og:description" content="In this posts, we will construct a widely used SNARK called PLONK
+Resources PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge
+Feist-Khovratovich technique for computing KZG proofs fast
+Cryptonotes - Erhant
+Detail Recall: Polynomial Commitment If you don&rsquo;t know anything about polynomial commitment, I suggest reading my previous post. Here is a short explanation about what they are:
+The prover would like to commit to some polynomial $f \in \mathbb{F}_p^{\le d}[X]$" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://michaelneuper.github.io/posts/zkp4/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2025-03-28T00:00:22+07:00" /><meta property="og:site_name" content="Giap&#39;s Blog" />
+
+
+
+  
+  <link rel="canonical" href="https://michaelneuper.github.io/posts/zkp4/">
+
+  
+  
+  <meta itemprop="name" content="Zero Knowledge Proof: The PLONK SNARK">
+<meta itemprop="description" content="In this posts, we will construct a widely used SNARK called PLONK
+Resources PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge
+Feist-Khovratovich technique for computing KZG proofs fast
+Cryptonotes - Erhant
+Detail Recall: Polynomial Commitment If you don&rsquo;t know anything about polynomial commitment, I suggest reading my previous post. Here is a short explanation about what they are:
+The prover would like to commit to some polynomial $f \in \mathbb{F}_p^{\le d}[X]$"><meta itemprop="datePublished" content="2024-04-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2025-03-28T00:00:22+07:00" />
+<meta itemprop="wordCount" content="4100">
+<meta itemprop="keywords" content="Learning,ZKP," />
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.e562d763c6d0825495eb17de8b2c1d9800cf7c08db1c36accedf77a5fccfc4b9.css" integrity="sha256-5WLXY8bQglSV6xfeiywdmADPfAjbHDaszt93pfzPxLk=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.ba38eba94cb47fef9936258c42d11ff19fa9686a30b38e783773fe3f15eb44dc.css" integrity="sha256-ujjrqUy0f&#43;&#43;ZNiWMQtEf8Z&#43;paGows454N3P&#43;PxXrRNw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Zero Knowledge Proof: The PLONK SNARK - Giap&#39;s Blog</title>
+  
+
+  
+  <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Zero Knowledge Proof: The PLONK SNARK"/>
+<meta name="twitter:description" content="In this posts, we will construct a widely used SNARK called PLONK
+Resources PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge
+Feist-Khovratovich technique for computing KZG proofs fast
+Cryptonotes - Erhant
+Detail Recall: Polynomial Commitment If you don&rsquo;t know anything about polynomial commitment, I suggest reading my previous post. Here is a short explanation about what they are:
+The prover would like to commit to some polynomial $f \in \mathbb{F}_p^{\le d}[X]$"/>
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.be779f459ad7e3aaf8afd0f80c6a61ca6c50993f5f18512532100ac6d93f0fa9.css" integrity="sha256-vnefRZrX46r4r9D4DGphymxQmT9fGFElMhAKxtk/D6k=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="https://michaelneuper.github.io/">Giap&#39;s Blog</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+        <span class="icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17,11H16a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm0,4H16a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2ZM11,9h6a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2ZM21,3H7A1,1,0,0,0,6,4V7H3A1,1,0,0,0,2,8V18a3,3,0,0,0,3,3H18a4,4,0,0,0,4-4V4A1,1,0,0,0,21,3ZM6,18a1,1,0,0,1-2,0V9H6Zm14-1a2,2,0,0,1-2,2H7.82A3,3,0,0,0,8,18V5H20Zm-9-4h1a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2Zm0,4h1a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2Z"/></svg>
+</span>
+      
+      <a class="link" href="/posts/">Blog</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+        <span class="icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+<path d="M10.07031,20.50291a1.00008,1.00008,0,0,0-1.18115-.9834c-1.30908.24024-2.96191.27637-3.40137-.958a5.70754,5.70754,0,0,0-1.83691-2.415,1.20073,1.20073,0,0,1-.1665-.10938,1,1,0,0,0-.93067-.64551H2.54883a.99965.99965,0,0,0-1,.99512c-.00391.81543.811,1.33789,1.1416,1.51465a4.4408,4.4408,0,0,1,.92383,1.35937c.36426,1.02344,1.42285,2.57617,4.46582,2.376.001.03516.00195.06836.00244.09863l.00439.26758a1,1,0,0,0,2,0l-.00488-.31836C10.07715,21.4951,10.07031,21.22068,10.07031,20.50291Zm10.667-15.126c.03174-.125.063-.26367.09034-.41992a6.27792,6.27792,0,0,0-.40821-3.293,1.002,1.002,0,0,0-.61572-.58007c-.356-.12012-1.67041-.35645-4.18408,1.25a13.86918,13.86918,0,0,0-6.354,0C6.76221.751,5.45459.9658,5.10205,1.07908a.99744.99744,0,0,0-.63135.584,6.3003,6.3003,0,0,0-.40332,3.35644c.02442.12793.05078.2461.07813.35449A6.26928,6.26928,0,0,0,2.89014,9.20311a8.42168,8.42168,0,0,0,.04248.92187c.334,4.60254,3.334,5.98438,5.42431,6.459-.04345.125-.083.25878-.11816.40039a1.00023,1.00023,0,0,0,1.94238.47851,1.6784,1.6784,0,0,1,.46778-.87793.99947.99947,0,0,0-.5459-1.74512c-3.4541-.39453-4.95362-1.80175-5.1792-4.89843a6.61076,6.61076,0,0,1-.03369-.73828,4.25769,4.25769,0,0,1,.91943-2.71289,3.022,3.022,0,0,1,.1958-.23145.99988.99988,0,0,0,.188-1.02441,3.3876,3.3876,0,0,1-.15527-.55567A4.09356,4.09356,0,0,1,6.1167,3.06346a7.54263,7.54263,0,0,1,2.415,1.17968,1.00877,1.00877,0,0,0,.82764.13282,11.77716,11.77716,0,0,1,6.17285.001,1.00549,1.00549,0,0,0,.83056-.13769,7.572,7.572,0,0,1,2.40528-1.19043,4.03977,4.03977,0,0,1,.0874,1.57812,3.205,3.205,0,0,1-.16895.60743.9999.9999,0,0,0,.188,1.02441c.07715.08691.1543.18066.22363.26855A4.12186,4.12186,0,0,1,20,9.20311a7.03888,7.03888,0,0,1-.0376.77734c-.22021,3.05566-1.72558,4.46387-5.1958,4.85937a1,1,0,0,0-.54541,1.7461,1.63079,1.63079,0,0,1,.46631.9082,3.06079,3.06079,0,0,1,.09229.81934v2.334C14.77,21.2949,14.77,21.78025,14.77,22.00291a1,1,0,1,0,2,0c0-.2168,0-.69238.00977-1.33984V18.31346a4.8815,4.8815,0,0,0-.15479-1.31153,4.25638,4.25638,0,0,0-.11621-.416,6.51258,6.51258,0,0,0,5.44531-6.42383A8.69677,8.69677,0,0,0,22,9.20311,6.13062,6.13062,0,0,0,20.7373,5.37693Z"/></svg>
+</span>
+      
+      <a class="link" href="https://github.com/Giapppp">GitHub</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">Zero Knowledge Proof: The PLONK SNARK</h1>
+    <div class="publish-metadata">
+      
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      25 April 2024
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          4100 words
+        </span>
+      
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~20 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  <div>
+    
+    <a class="link tag" href='https://michaelneuper.github.io/tags/learning'>#Learning</a>
+    
+    <a class="link tag" href='https://michaelneuper.github.io/tags/zkp'>#ZKP</a>
+    
+    <br></br>
+  </div>
+  
+  
+  
+  <details>
+    <summary>
+      <b>Table of Contents</b>
+    </summary>
+    <div class="toc numbered-subtitles"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#detail">Detail</a>
+      <ul>
+        <li><a href="#recall-polynomial-commitment">Recall: Polynomial Commitment</a></li>
+        <li><a href="#the-kzg-polynomial-commitment-scheme">The KZG polynomial commitment scheme</a>
+          <ul>
+            <li><a href="#trusted-setup-setuplambda-to-gp">Trusted Setup: $setup(\lambda) \to gp$</a></li>
+            <li><a href="#commitment-commitgp-f-to-comm_f">Commitment: $commit(gp, f) \to comm_f$</a></li>
+            <li><a href="#evaluation-eval">Evaluation: $eval$</a></li>
+            <li><a href="#properties-of-kzg">Properties of KZG</a></li>
+            <li><a href="#kzg-fast-multi-point-proof-generation">KZG fast multi-point proof generation</a></li>
+            <li><a href="#dory-poly-commit-scheme">Dory Poly-commit Scheme</a></li>
+            <li><a href="#pcs-to-commit-to-a-vector">PCS to Commit to a Vector</a></li>
+          </ul>
+        </li>
+        <li><a href="#proving-properties-of-committed-polynomials">Proving properties of committed polynomials</a>
+          <ul>
+            <li><a href="#equality-testing">Equality Testing</a></li>
+            <li><a href="#important-proof-gadgets-for-univariates">Important Proof Gadgets for Univariates</a>
+              <ul>
+                <li><a href="#zero-test">Zero Test</a></li>
+                <li><a href="#product-check-and-sum-check">Product Check and Sum Check</a></li>
+                <li><a href="#permutation-check">Permutation Check</a></li>
+                <li><a href="#prescribed-permutation-check">Prescribed permutation check</a></li>
+                <li><a href="#summarize">Summarize</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#the-plonk-iop-for-general-circuit">The PLONK IOP for general circuit</a>
+          <ul>
+            <li><a href="#step-1-compile-circuit-to-computation-trace">Step 1: Compile circuit to computation trace</a></li>
+            <li><a href="#step-15-encode-trace-as-a-polynomial">Step 1.5: Encode trace as a polynomial</a></li>
+            <li><a href="#step-2-prove-validity-of-t">Step 2: Prove validity of $T$</a>
+              <ul>
+                <li><a href="#1-t-encodes-the-correct-inputs">(1): $T$ encodes the correct inputs</a></li>
+                <li><a href="#2-every-gate-is-evaluated-correctly">(2): Every gate is evaluated correctly</a></li>
+                <li><a href="#3-the-wiring-is-correct">(3): The wiring is correct</a></li>
+                <li><a href="#4-output-of-last-gate-is-0">(4): Output of last gate is 0</a></li>
+              </ul>
+            </li>
+            <li><a href="#final-step-the-plonk-poly-iop">Final step: The PLONK Poly-IOP</a></li>
+            <li><a href="#extension-of-plonk">Extension of PLONK</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  </details>
+  
+  
+  <article class="content numbered-subtitles">
+    
+    <p>In this posts, we will construct a widely used SNARK called PLONK</p>
+<h2 id="resources">Resources</h2>
+<p><a href="https://eprint.iacr.org/2019/953">PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge</a></p>
+<p><a href="https://alinush.github.io/2021/06/17/Feist-Khovratovich-technique-for-computing-KZG-proofs-fast.html">Feist-Khovratovich technique for computing KZG proofs fast</a></p>
+<p><a href="https://crypto-notes-erhant.vercel.app/zklearning/the-PLONK-snark.html">Cryptonotes - Erhant</a></p>
+<h2 id="detail">Detail</h2>
+<h3 id="recall-polynomial-commitment">Recall: Polynomial Commitment</h3>
+<p>If you don&rsquo;t know anything about polynomial commitment, I suggest reading <a href="https://giapppp.github.io/posts/zkp3/">my previous post</a>. Here is a short explanation about what they are:</p>
+<ul>
+<li>
+<p>The prover would like to commit to some polynomial $f \in \mathbb{F}_p^{\le d}[X]$</p>
+</li>
+<li>
+<p>An $eval$ finction uses evaluate some values for this polynomial, without revealing it. For example, pick some public $u, v \in \mathbb{F}_p$</p>
+<ul>
+<li>
+<p>Prover will convince that $f(u) = v$ and $deg(f) \le d$</p>
+</li>
+<li>
+<p>Verifier will only know $d, u, v$ and a polynomial commitment $comm_f$, also shown as $f$ sometimes</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The proof size for $eval$ and the verifier time should both be in $\mathcal{O}_{\lambda}(\log d)$</p>
+</li>
+</ul>
+<h3 id="the-kzg-polynomial-commitment-scheme">The KZG polynomial commitment scheme</h3>
+<p>Let&rsquo;s talk about KZG [<a href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf">Kate-Zaverucha-Goldberg'10</a>] polynomial commitment scheme. We will work with finite cyclic group $\mathbb{G}$ of order $p$ with generator $g$</p>
+<h4 id="trusted-setup-setuplambda-to-gp">Trusted Setup: $setup(\lambda) \to gp$</h4>
+<p>KZG starts with a trusted setup $setup(\lambda) \to gp$ to produce public parameters. This is done as follows:</p>
+<ol>
+<li>
+<p>Sample some random $\tau \in \mathbb{F}_p$</p>
+</li>
+<li>
+<p>Calculate public parameters $gp$: $$gp = (H_0 = g, H_1 = \tau g,..,H_d = \tau^d g) \in \mathbb{G}^{d+1}$$</p>
+</li>
+</ol>
+<p>and we will have $|gp| = d + 1$</p>
+<ol start="3">
+<li>Delete $\tau$. If this number is leaked and in wrong hands, they can create fake proofs. This is why the setup must take place in a trusted environment.</li>
+</ol>
+<h4 id="commitment-commitgp-f-to-comm_f">Commitment: $commit(gp, f) \to comm_f$</h4>
+<p>A commitment will take the public parameters $gp$ along with the polynomial $f$ to be committed, and produces the commitment</p>
+<ul>
+<li>
+<p>The commitment is shown as $commit(gp, f) \to comm_f$</p>
+</li>
+<li>
+<p>Our commitment will be $comm_f = f(\tau)g \in \mathbb{G}$</p>
+</li>
+</ul>
+<p>How to calculate $f(\tau)$ without knowledge of $\tau$?. Let&rsquo;s take a look about the function $f$: $$f(X) = f_0 + f_1X + f_2X^2 + &hellip; + f_dX^d$$</p>
+<p>Remember that we know $H_i = X^i, i = 0..d$, so we can calculate: $$f_0  H_0 + f_1  H_1 + &hellip; + f_d  H_d$$</p>
+<p>When you expand $H_i$, you will see that: $$f_0g + f_1 \tau g + f_2 \tau^2 g + &hellip; + f_d \tau^d g = f(\tau)g$$</p>
+<p>And you get the commitment you want! Note that this commitment is <strong>binding</strong> but not <strong>hiding</strong> as is.</p>
+<h4 id="evaluation-eval">Evaluation: $eval$</h4>
+<p>Let us now see how a verifier evaluates the commitment</p>
+<ul>
+<li>
+<p>Prover knows $(gp, f, u, v)$ and wants to prove that $f(u) = v$</p>
+</li>
+<li>
+<p>Verifier knows $(gp, comm_f, u, v)$</p>
+</li>
+</ul>
+<p>We will use some well-known properties of polynomial:</p>
+<ul>
+<li>
+<p>$f(u) = v$ if and only if $u$ is a root of $\hat{f} = f - v$.</p>
+</li>
+<li>
+<p>$u$ is a root of $\hat{f}$ if and only if the polynomial $(X - u)$ divides $\hat{f}$</p>
+</li>
+<li>
+<p>$(X - u)$ divides $\hat{f}$ if and only if $\exist q \in \mathbb{F}_p[X]$ such that $q(X)(X - u) = \hat{f}(X) = f(X) - v$. This is another way of saying that since $(X - u)$ divides $\hat{f}$ there will be no remainder left from this division, and there will be some resulting quotient polynomial $q$</p>
+</li>
+</ul>
+<p>Now we can talk about the plan:</p>
+<ol>
+<li>
+<p>Prover computes $q(X)$ and commits to $q$ as $comm_q$. Remember that commitment results in a single group element only</p>
+</li>
+<li>
+<p>Prover send the proof $\pi = comm_q$</p>
+</li>
+<li>
+<p>Verifier accepts if $(\tau - u) comm_q = comm_f - vg$</p>
+</li>
+</ol>
+<p>You can see the appearance of $\tau$ here, which is supposed to be secret. Well, we use <strong>pairing</strong> to hide $\tau$ while still allowing the above computation. In doing so, only $H_0$ and $H_1$ will be used, which makes this thing independent of degree $d$</p>
+<p>Actually, we still need $d$. The prover must compute the quotient polynomial $q$ and the complexity of that is related to $d$, so you will lose from prover time when you have large degrees</p>
+<p>To prove that this is a secure poly-commit scheme, we need to dig deeper
+about polynomial commitments, which will be described in my next post</p>
+<h4 id="properties-of-kzg">Properties of KZG</h4>
+<p><strong>Generalizations:</strong> It has been shown that you can use KZG to commit to $k$-variate polynomials</p>
+<p><strong>Batch Proofs:</strong> Suppose you have commitments to $n$ polynomials $f_1, f_2, &hellip;, f_n$ and you have $m$ values to reveal in each of them, meaning that you basically want to prove all evaluations defined by $f_i(u_{i,j}) = v_{i, j}$ for $i \in [n]$ and $j \in [m]$. Normally, this would require $n \times m$ evaluations, but thanks to KZG we can actually do this in a single proof that is a single group element</p>
+<p><strong>Linear-time Commitments:</strong> We have several ways to represent a polynomial $f(X)$ in $\mathbb{F}_p^{(\le d)}[X]$:</p>
+<ul>
+<li>
+<p><strong>Coefficient representation:</strong> We will store $f(X) = f_0 + f_1X + &hellip; + f_dX^d$ as an array of values $[f_0, f_1,&hellip;,f_d]$. So we can compute the commitment in linear time $\mathcal{O}(d)$ since we just have to multiply $f_i$ with $H_i$ for $i \in [d]$, giving us $comm_f = f_0H_0 + f_1H_1 + &hellip; + f_dH_d$</p>
+</li>
+<li>
+<p><strong>Point-value representation with NTT(Number Theoristic Transfrom):</strong> A polynomial of degree $d$ can be defined by $d + 1$ points. So we have $d + 1$ points: $(a_0, f(a_0)), (a_1, f(a_1)),&hellip;,(a_d, f(a_d))$</p>
+<ul>
+<li>
+<p>To compute $comm_f$ naively, we can construct the coefficients $f_0, f_1, &hellip;,f_d$ to basically convert point-value representation to coefficient representation, then compute the commitment</p>
+</li>
+<li>
+<p>We can use Number Theoretic Transfrom (NTT), which is closely related to Fourier Transform, to convert from point-value to coefficient representation. The complexity is $\mathcal{O}(d \log d)$</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Point-value representation with Lagrange Interpolation:</strong></p>
+<ul>
+<li>
+<p>We can use Lagrange Interpolation to speed up our commitment computing! So we have: $$\begin{aligned} f(\tau) &amp;= \sum _ {i=0}^{d} \lambda _ i(\tau) f(a _ i) \newline \lambda _ i (\tau) &amp;= \frac{\prod ^ d _ {j = 0, j \ne i} (\tau - a_j)}{\prod ^ d _ {j = 0, j \ne i} (a_i - a_j)} \in \mathbb{F}_p \end{aligned}$$</p>
+</li>
+<li>
+<p>The idea here is that our public parameters will actually be in Lagrange form, and the process of getting this just a linear transformation that everyone can do. So, we obtain public parameter $\hat{gp}$ that looks like: $$\hat{gp} = (\hat{H}_0 = \lambda_0(\tau)g, \hat{H}_1 = \lambda_1(\tau)g, &hellip;, \hat{H}_d = \lambda_d(\tau)g) \in \mathbb{G}^{d+1}$$ This way, the commitment can be compute in linear time $\mathcal{O}(d)$: $$comm_f = f(\tau)g = f(a_0)\hat{H}_0 + f(a_1)\hat{H}_1 + &hellip; + f(a_d)\hat{H}_d$$</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="kzg-fast-multi-point-proof-generation">KZG fast multi-point proof generation</h4>
+<p>Let $\Omega \subseteq \mathbb{F}_p$ and $|\Omega| = d$. Suppose that the prover needs an evaluation proofs $\pi_a \in G$ <u>for all</u> $a \in \Omega$</p>
+<ul>
+<li>
+<p>With a naive way, this takes time $\mathcal{O}(d^2)$, because $d$ proofs each takes time $\mathcal{O}(d)$</p>
+</li>
+<li>
+<p>Thankfully, we can use <a href="https://eprint.iacr.org/2023/033">Feist-Khovratovich'23</a> to do this: If $\Omega$ is a multiplicative subgroup, the evaluation takes time in $\mathcal{O}(d \log d)$, otherwise, it takes time in $\mathcal{O}(d \log^2 d)$</p>
+</li>
+</ul>
+<h4 id="dory-poly-commit-scheme">Dory Poly-commit Scheme</h4>
+<p>We have some difficulties with KZG:</p>
+<ul>
+<li>
+<p>Requires a trusted setup to compute the public parameters $gp$</p>
+</li>
+<li>
+<p>$gp$ size is linear in the degree $d$</p>
+</li>
+</ul>
+<p>To deal with that hurdle, we can use Dory <a href="https://eprint.iacr.org/2020/1274.pdf">Lee'20</a>. It has some properties:</p>
+<ul>
+<li>
+<p><strong>Transparent setup:</strong> No secret randomness in setup</p>
+</li>
+<li>
+<p><strong>$comm_f$</strong> is a single group element, independent of degree</p>
+</li>
+<li>
+<p>$eval$ proof size for $f \in \mathbb{F}_p^{\le d}[X]$ is $\mathcal{O}(\log d)$ group element, while KZG&rsquo;s $eval$ proof size is constant</p>
+</li>
+<li>
+<p>$eval$ verify time is $\mathcal{O}(\log d)$, KZG took constant time</p>
+</li>
+<li>
+<p>prover time is $\mathcal{O}(d)$</p>
+</li>
+</ul>
+<h4 id="pcs-to-commit-to-a-vector">PCS to Commit to a Vector</h4>
+<p>We will talk about <strong>vector commitment</strong>, which is a drop-in replacement for Merkle Trees</p>
+<p>Suppose that Bob want to commit a vector $(u_1, &hellip;, u_k) \in \mathbb{F}_p^{(\le d)}$. He can interpolate a polynomial $f$ such that $f(i) = u_i$ for $i = 1,..,k$ and commit $f$ as we have described above</p>
+<p>If Alice wants to query some elements like &ldquo;show me that $u_2 = a$ and $u_4 = b$&rdquo;, it is equivalent to &ldquo;show me $f(2) = a$ and $f(4) = b$&rdquo; and we know we can prove this in a single group element using batch proof, which is a very cool property of KZG</p>
+<p>When we use a Merkle Tree, each evaluation proof would have size $\mathcal{O}(\log k)$ and for $l$ proofs this would mean $\mathcal{O}(l \log k)$ proof size, a lot bigger than the constant proof size of KZG.</p>
+<p>For more applications of using PCS in Merkle Trees, you can check <a href="https://blog.ethereum.org/2021/12/02/verkle-tree-structure">Verkle Tree</a></p>
+<h3 id="proving-properties-of-committed-polynomials">Proving properties of committed polynomials</h3>
+<p><strong>Notation:</strong></p>
+<p>When we say the verifier queries a polynomial $f$ at some random point $r$ to get $f(r)$, we actually mean that the prover computes $y = f(r)$ and a proof of this evaluation $\pi_f$, then it sends back $y, \pi_f$ to the verifier</p>
+<p>Everything we will do in our interactive proofs will be public-coin protocols, so we can compile it into non-interactive protocols using Fiat-Shamir</p>
+<h4 id="equality-testing">Equality Testing</h4>
+<p>In KZG, to test if $f = g$, verifier only need to know $comm_f, comm_g$. But this isn&rsquo;t enough for more complex equality tests</p>
+<p>For example, suppose that the verifier want to see if $f = g_1 g_2 g_3$ and has $comm_f, comm_{g_1}, comm_{g_2}, comm_{g_3}$. The verifier need to query all four polynomial at random $r \in \mathbb{F}_p$ and test equality, and this takes lots of work !</p>
+<h4 id="important-proof-gadgets-for-univariates">Important Proof Gadgets for Univariates</h4>
+<p>Let $\Omega$ be some subset of $\mathbb{F}_p$ of size $k$</p>
+<p>First, we need to know about the <strong>vanishing polynomial</strong></p>
+<p><strong>Definition:</strong> The vanishing polynomial of $\Omega$ is $$
+Z_{\Omega}(X) := \prod _ {a \in \Omega}(X - a)$$ with $deg(Z_{\Omega}) = k$</p>
+<p>Then, let $\omega$ be a primitive $k$-th root of unity, meaning that $\omega^k = 1$. If the set $\Omega$ is defined as follows: $$\Omega = \lbrace 1, \omega, \omega^2,&hellip;, \omega^{k - 1} \rbrace \subseteq \mathbb{F} _ p$$ then $Z_{\Omega}(X) = X^k - 1$.</p>
+<p>For $r \in \mathbb{F} _ p$, evaluating $Z_{\Omega}(r)$ takes $\le 2 \log _ 2 k$ field operations, thanks to multiply-and-square method</p>
+<p>Now, we will construct efficient poly-IOPs for the following proof gadgets: Let $f, g \in \mathbb{F}_p^{(\le d)}[X]$ be polynomials of degree $d$ and $d \ge k$. The verifier has a commitment to these polynomials, $comm_f$ and $comm_g$. Our proof gadgets will have:</p>
+<ul>
+<li>
+<p><strong>Equality Test:</strong> prove that $f, g$ are equal. We know that evaluating them at a random point and seeing if they are equal does the trick, assuming degree is much smaller than the size of the finite field.</p>
+</li>
+<li>
+<p><strong>Zero Test:</strong> prove that $f$ is identically zero on $\Omega$, meaning that it acts like a zero-polynomial for every value in $\Omega$, but of course it can do whatever it wants for values outside of $\Omega$ but in $\mathbb{F}_p$</p>
+</li>
+<li>
+<p><strong>Sum Check:</strong> prove that $\sum_{a \in \Omega}f(a) = 0$</p>
+</li>
+<li>
+<p><strong>Product Check:</strong> prove that $\prod_{a \in Omega}f(a) = 1$</p>
+</li>
+<li>
+<p><strong>Permutation Check:</strong> prove that evaluations of $f$ over $\Omega$ is a permutation of evaluations of $g$ over $\Omega$</p>
+</li>
+<li>
+<p><strong>Prescribed Permutation Check:</strong> prove that evaluations of $f$ over $\Omega$ is a permutation of evaluations of $g$ over $\Omega$, with a &ldquo;prescribed&rdquo; permutation $W: \Omega \to \Omega$. This permutation is a bijection $\forall i \in [k]: W(\omega^i) = \omega^j$</p>
+</li>
+</ul>
+<h5 id="zero-test">Zero Test</h5>
+<p>To understand Zero Test, we need to know about a simple but useful lemma</p>
+<p><strong>Lemma:</strong> $f$ is zero on $\Omega$ if and only if $f(X)$ is divisible by $Z_{\Omega}(X)$</p>
+<p>Now we are ready!</p>
+<p><strong>Setup:</strong> $P$ has a polynomial $f \in \mathbb{F}^{(\le d)} _ p[X], deg(f) = d$ and $V$ has $comm_f$. $V$ wants to prove that $f$ is zero in $\Omega$</p>
+<p><strong>Protocol:</strong></p>
+<ul>
+<li>
+<p>The prover $P$ will calculate $q(X) = f(X)/Z_{\Omega}(X)$ and send $q$ to the verifier. Note that if $f(X)$ is not zero, then $q(X)$ isn&rsquo;t a polynomial.</p>
+</li>
+<li>
+<p>The verifier $V$ want to check $q$ is the quotient of $f(X)/Z_{\Omega}(X)$, so $V$ will choose random $r \in \mathbb{F}_p$, then query $q(X)$ and $f(X)$ at $r$. By the way, $V$ can learn $q(r), f(r)$</p>
+</li>
+<li>
+<p>$V$ will accept if $f(r) = q(r) * Z_{\Omega}(r)$, this implies that $f(X) = q(X) * Z_{\Omega}(r)$ with high probability</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_1.png" alt="Image alt"></p>
+<p>Because $V$ need to evaluate $Z_{\Omega}(r)$ by itself, so we want the vanishing polynomial to be efficiently computable so the verifier can do this quickly. In this situation, our $Z_{\Omega}(r)$ can be calculated fast by square-and-multiply method.</p>
+<p><strong>Theorem:</strong> This protocol is complete and sound, assuming $\frac{d}{p}$ is negligible</p>
+<p>Let&rsquo;s analyze the costs in this IOP:</p>
+<ul>
+<li>
+<p>For Verifier: $\mathcal{O}(\log k)$ and two poly queries, but can be done in one, thanks to KZG property</p>
+</li>
+<li>
+<p>For Prover: Dominated by the time to compute $q(X)$ and then commit to $q(X)$</p>
+</li>
+</ul>
+<h5 id="product-check-and-sum-check">Product Check and Sum Check</h5>
+<p>Because Prod-check and sum-check are almost identical, so we will only look at prod-check. Again, our claim is that $\prod_{a \in \Omega} f(a) = 1$ and we would like to prove that</p>
+<p>Set $t \in \mathbb{F}^{(\le k)}_p[X]$ to be the degree-$k$ polynomial. Define the evaluations of this polynomial as follows:</p>
+<ul>
+<li>
+<p>$t(1) = f(1)$</p>
+</li>
+<li>
+<p>$t(\omega^s) = \prod_{i=0}^s f(\omega^i), s = 1,..,k-1$</p>
+</li>
+</ul>
+<p>We can notice the recurrence relation between $t$ and $f$: $$ \forall x \in \Omega: t(\omega x) = t(x) f(\omega x)$$ for all $x \in \Omega$ (including at $x = \omega^{k-1}$)</p>
+<p>We need a lemma to build this IOP:</p>
+<p><strong>Lemma:</strong> If $t(\omega^{k-1}) = 1$ and $t(\omega x) - t(x) f(\omega x) = 0$ for all $x \in \Omega$, then $\prod_{a \in \Omega}f(a) = 1$</p>
+<p>Let&rsquo;s write the interactive proof! The idea will to construct another polynomial $t_1(X)$ which is: $$t_1(X) = t(\omega X) - t(x) f(\omega X)$$ which implies that if a zero-test on $t_1(X)$ for $\Omega$ passes, then prod-check passes</p>
+<p><strong>Setup:</strong> $P$ has a polynomial $f \in \mathbb{F}^{(\le d)} _ p[X], deg(f) = d$ and $V$ has $comm_f$. $V$ wants to prove that $\prod_{a \in Omega}f(a) = 1$</p>
+<p><strong>Protocol:</strong></p>
+<ul>
+<li>
+<p>$P$ will constructs $t(X) \in \mathbb{F}_p^{(\le k)}$ and $t_1(X) = t(\omega X) - t(X) f(\omega X)$. The prover also sets $q(X) = t_1(X) / (X^k - 1) \in \mathbb{F}_p^{(\le d)}$ and send $comm_t, comm_q$ to the verifier. Note that $t_1(X)$ should be zero on $\Omega$</p>
+</li>
+<li>
+<p>The verifier $V$ will choose random $r \in \mathbb{F}_p$, then query $t(X)$ at $\omega^{k-1}, r, \omega r$ to learn $t(\omega^{k-1}), t(r), t(\omega r)$ and query $q(X), f(X)$ at $r$ and $\omega r$ respectively, to learn $q(r)$ and $f(\omega r)$</p>
+</li>
+<li>
+<p>The verifier will accept if $t(\omega^{k-1}) = 1$ and $t(\omega r) - t(r) f(\omega r) = q(r) (r^k - 1)$</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_2.png" alt="Image alt"></p>
+<p>The cost of this protocol is as follows:</p>
+<ul>
+<li>
+<p>Proof size is two commitments $comm_q, comm_t$ and five evaluations. Keeping in mind that evaluations can be batched, the entire proof is just 3 group elements</p>
+</li>
+<li>
+<p>Prover time is dominated by computing $q(X)$ that runs in time $\mathcal{O}(k \log k)$</p>
+</li>
+<li>
+<p>Verifier time is dominated by computing $r^k - 1$ and $\omega^{k-1}$, both in time $\mathcal{O}(\log k)</p>
+</li>
+</ul>
+<p>Note that this protocol works for <strong>rational functions</strong>. Our claim will be $\prod_{a \in \Omega}(f/g)(a) = 1$ and we construct a similar $t$ polynomial, only this time $f(x)$ is divided by $g(x)$ in the definition, then the lemma is also similar:  If $t(\omega^{k-1}) = 1$ and $t(\omega x) g(\omega x) - t(x) f(\omega x) = 0$ for all $x \in \Omega$, then $\prod_{a \in \Omega}f(a)/g(a)a = 1$</p>
+<h5 id="permutation-check">Permutation Check</h5>
+<p><strong>Setup:</strong></p>
+<p>Let $f, g$ be polynomials in $\mathbb{F}_p^{(\le d)}[X]$. The verifier has $comm_f, comm_g$. Prover wants to prove that:</p>
+<ul>
+<li>
+<p>$(f(1), f(\omega), f(\omega^2),&hellip;,f(\omega^{k-1})) \in \mathbb{F}_p^k$</p>
+</li>
+<li>
+<p>is a permutation of $(g(1), g(\omega), g(\omega^2),&hellip;,g(\omega^{k-1})) \in \mathbb{F}_p^k$.</p>
+</li>
+<li>
+<p>In another way, the prover wants to prove that $g(\Omega)$ is the same as $f(\Omega)$, just permuted</p>
+</li>
+</ul>
+<p>To prove this, we will do what is known as the Lipton&rsquo;s trick [Lipton'89]. We will construct two auxiliary polynomials:</p>
+<ul>
+<li>
+<p>$\hat{f} = \prod_{a\in \Omega}(X - f(a))$</p>
+</li>
+<li>
+<p>$\hat{g} = \prod_{a\in \Omega}(X - f(a))$</p>
+</li>
+</ul>
+<p>Then, $g$ is a permutation of $f$ if and only if $\hat{f}(X) = \hat{g}(X)$</p>
+<p><strong>Protocol:</strong></p>
+<ul>
+<li>
+<p>The verifier $V$ will choose random $r \in \mathbb{F} _ p$ and send to prover. To prove that $\hat{f} = \hat{g}$, the prover need to show the evaluation of them at point $r$. Calculating these polynomials are a bit expensive, so we can use prod-check on the rational function: $$\frac{\hat{f}(r)}{\hat{g}(r)} = \prod_{a \in \Omega}\frac{r - f(a)}{r - g(a)} = 1$$</p>
+</li>
+<li>
+<p>If the product is $1$, it means that $\hat{f}(r) = \hat{g}(r)$, and with high probability, $\hat{f} = \hat{r}$</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_3.png" alt="Image alt"></p>
+<p>The cost of this proof is just two commitments, and six evaluations</p>
+<h5 id="prescribed-permutation-check">Prescribed permutation check</h5>
+<p>First, let&rsquo;s describe the term &ldquo;permutation&rdquo; here.</p>
+<ul>
+<li>$W: \Omega \to \Omega$ is a <strong>permutation of</strong> $\Omega$ if for all $i \in [k]: W(\omega^i) = \omega^j$ is a bijection. For example, with $k = 3$, we will have $W(\omega^0) = \omega^2, W(\omega^1) = \omega^0, W(\omega^2) = \omega^1$</li>
+</ul>
+<p>Now, let $f, g$ be polynomials in $\mathbb{F}_p^{(\le d)}[X]$. The verifier has $comm_f, comm_g, comm_W$. The prover wants to prove that $f(y) = g(W(y))$ for all $y \in \Omega$. In another way, $V$ wants to prove that $g(\Omega)$ is the same as $f(\Omega)$, permuted by the prescribed $W$</p>
+<p>Why we can&rsquo;t use a zero-test to prove that $f(y) - g(W(y)) = 0$ on $\Omega$ ? The problem is, the polynomial $f(y) - g(W(y))$ has degree $k^2$, so the prover would need to manipulate polynomials of degree $k^2$. Therefore, we will have quadratic time prover, but our goal is linear time prover.</p>
+<p>We can reduce this to a prod-check on a polynomial of degree $2k$. Firstly, let&rsquo;s talk about the observation that we will use:</p>
+<p><strong>Observation:</strong> if $(W(a), f(a))_{a \in \Omega}$ is a permutation of $(a, g(a))$ for $a \in \Omega$ , then $f(y) = g(W(y))$ for all $y \in \Omega$</p>
+<p>We can prove it by example:</p>
+<ul>
+<li>
+<p>Permutation: $W(\omega^0) = \omega^2, W(\omega^1) = \omega^0, W(\omega^2) = \omega^1$</p>
+</li>
+<li>
+<p>First set of pairs: $(\omega^0, g(\omega^0)), (\omega^1, g(\omega^1)), (\omega^2, g(\omega^2))$</p>
+</li>
+<li>
+<p>Second set of pairs: $(\omega^0, f(\omega^0)), (\omega^2, f(\omega^1)), (\omega^1, f(\omega^2))$</p>
+</li>
+</ul>
+<p>Now, we define two auxiliary polynomials, which will be bivariate polynomials of total degree $|\Omega|$:</p>
+<ul>
+<li>
+<p>$\hat{f}(X, Y) = \prod_{a \in \Omega}(X - Y W(a) - f(a))$</p>
+</li>
+<li>
+<p>$\hat{g}(X, Y) = \prod_{a \in \Omega}(X - Ya - g(a))$</p>
+</li>
+</ul>
+<p><strong>Lemma:</strong> $\hat{f}(X, Y) = \hat{g}(X, Y) \iff (W(a), f(a)) _ {a \in \Omega}$ is a permutation of $(a, g(a)) _ {a \in \Omega}$</p>
+<p>To proof of this is left as exercise, though if you want to try, you might make use of the fact that $\mathbb{F}_p[X, Y]$ is a unique factorization domain. (I will provide the proof after I learned about UFD :D)</p>
+<p>The protocol continues with two random numbers $r, s$ which are chosen by the verifier. To prove that $\hat{f} = \hat{g}$, the prover need to evaluating $\hat{f}, \hat{g}$ at point $(r, s)$. Now, we can use prod-check like permutation check, instead of evaluating the auxiliary polynomials. Our rational function will be:</p>
+<p>$$\frac{\hat{f}(r, s)}{\hat{g}(r, s)} = \prod_{a \in \Omega} \Big ( \frac{r - s W(a) - f(a)}{r - s a - g(a)} \Big ) = 1$$</p>
+<ul>
+<li>Therefore, by Schwartz-Zippel lemma, we can conclude that they are equal as bivariate polynomials</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_4.png" alt="Image alt"></p>
+<p>This protocol is sound and complete, assuming $2d/p$ is negligible. The cost of this protocol is just like the cost described for prod-check.</p>
+<h5 id="summarize">Summarize</h5>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_5.png" alt="Image alt"></p>
+<p>Note that our protocols is public-coin protocol, so we can transform our protocols into non-interactive by Fiat-Shamir method.</p>
+<h3 id="the-plonk-iop-for-general-circuit">The PLONK IOP for general circuit</h3>
+<p><strong>PLONK</strong> is a poly-IOP for a general circuit $C(x, w)$</p>
+<p>PLONK is widely used in practice, some examples are listed in this table</p>
+<table>
+<thead>
+<tr>
+<th>Polynomial Commitment Scheme</th>
+<th>SNARK System</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KZG'10 (pairing)</td>
+<td>Aztec, JellyFish</td>
+</tr>
+<tr>
+<td>Bulletproofs (no pairings)</td>
+<td>Halo2 (slow verifier but no trusted setup)</td>
+</tr>
+<tr>
+<td>FRI (hashing)</td>
+<td>Plonky2 (no trusted setup)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-1-compile-circuit-to-computation-trace">Step 1: Compile circuit to computation trace</h4>
+<p>We will use an example circuit with an example evaluation. Our circuit have gates with two inputs and a single input</p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_6.png" alt="Image alt"></p>
+<p>The circuit above computes $(x_1 + x_2)(x_2 + w_1)$. The public inputs are $x_1 = 5, x_2 = 6$ and the secret input (witness) is $w_1 = 1$. We can easily compute the output is $77$, which is also public. The prover will try to prove that he knows a value of $w_1$ that makes the output $77$ with the given public inputs.</p>
+<p>We compile this evaluation into a computation trace, which is simply a table that shows inputs and outputs for each gate, along with circuit inputs.</p>
+<ul>
+<li>
+<p>Circuit inputs are $5, 6, 1$</p>
+</li>
+<li>
+<p>Gate traces are given in the following table.</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_7.png" alt="Image alt"></p>
+<h4 id="step-15-encode-trace-as-a-polynomial">Step 1.5: Encode trace as a polynomial</h4>
+<p>We will define some notations before start:</p>
+<ul>
+<li>
+<p>$|C|$ is the circuit size, equal to number gates in the circuit</p>
+</li>
+<li>
+<p>$|I| = |I_x| + |I_w|$ is the number of inputs to the circuit, which is the number of public inputs and the secret inputs combined</p>
+</li>
+<li>
+<p>$d = 3 \times |C| + |I|$</p>
+</li>
+<li>
+<p>$\Omega = \lbrace 1, \omega, \omega^2, &hellip;, \omega^{d - 1} \rbrace$ where $\omega^d = 1$</p>
+</li>
+</ul>
+<p>Our plan is interpolates $T \in \mathbb{F}_p^{(\le d)}[X]$ such that</p>
+<ol>
+<li>
+<p><strong>T encodes all inputs:</strong> $T(\omega^{-j}) = input_j$ for $j = 1,&hellip;,|I|$</p>
+</li>
+<li>
+<p><strong>T encodes all wires:</strong> For all $l = 0, &hellip;, |C| - 1$, we have</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>$T(\omega^{3l})$: left input to gate #l</p>
+</li>
+<li>
+<p>$T(\omega^{3l + 1})$: right input to gate #l</p>
+</li>
+<li>
+<p>$T(\omega^{3l + 2})$: output of gate #l</p>
+</li>
+</ul>
+<p>In out example, prover interpolates $T(X)$ such that:</p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_8.png" alt="Image alt"></p>
+<p>So, our polynomial will have degree 11, and prover can use FFT to compute the coefficients of $T$ in time $\mathcal{O}(d \log d)$</p>
+<h4 id="step-2-prove-validity-of-t">Step 2: Prove validity of $T$</h4>
+<p>After built $T(X) \in \mathbb{F}_p^{(\le d)}[X]$, the prover send $comm_T$ to the verifier. Now, the verifier must make sure that $T$ indeed belongs to the correct computation trace. To do that, it must do the following:</p>
+<ol>
+<li>
+<p>$T$ encodes the correct inputs</p>
+</li>
+<li>
+<p>Every gate is evaluated correctly</p>
+</li>
+<li>
+<p>The &ldquo;wiring&rdquo; is implemented correctly</p>
+</li>
+<li>
+<p>The output of last gate is 0. Well, in this example the output is $77$, but generally the verifier expects a $0$ output.</p>
+</li>
+</ol>
+<h5 id="1-t-encodes-the-correct-inputs">(1): $T$ encodes the correct inputs</h5>
+<p>Both prover and verifier interpolate a polynomial $v(X) \in \mathbb{F}_p^{(\le |I_x|)}[X]$ that encodes the $x$-inputs to the circuit: for $j = 1,&hellip;,|I_x|$, $v(\omega^{-j}) = input_j$</p>
+<p>Next, they will agree on the points encoding the input $\Omega_{inp} = \lbrace \omega^{-1}, \omega^{-2}, &hellip;, \omega^{-|I_x|} \rbrace$. Prover proves (1) by using a ZeroTest on $\Omega_{inp}$ to prove that:</p>
+<p>$$T(y) - v(y) = 0, \forall y \in \Omega_{inp}$$</p>
+<h5 id="2-every-gate-is-evaluated-correctly">(2): Every gate is evaluated correctly</h5>
+<p>The idea here is encode gate types using a <u>selector</u> polynomial $S(X)$</p>
+<p>We define $S(X) \in \mathbb{F}_p^{(\le d)}[X]$ such that $\forall l = 0, &hellip;, |C| - 1$:</p>
+<ul>
+<li>
+<p>$S(\omega^{3l}) = 1$ if gate #l is an addition gate</p>
+</li>
+<li>
+<p>$S(\omega^{3l}) = 0$ if gate #l is a multiplication gate</p>
+</li>
+</ul>
+<p>Then for all $y \in \Omega_{gates} = \lbrace 1, \omega^3, \omega^6, \omega^9,&hellip;, \omega^{3(|C| - 1)}$:</p>
+<p>$$ S(y)[T(y) + T(\omega y)] + (1 - S(y))(T(y) \times T(\omega y)) = T(\omega^2 y)$$</p>
+<p>Here, $T(y), T(\omega y), T(\omega^2 y)$ are the left input, right input and output respectively. Prover will use a zero-test on the set $\Omega_{gates}$ to prove that $\forall y \in \Omega_{gates}$: $$S(y) \times (T(y) + T(\omega y)) + (1 - S(y))(T(y) \times T(\omega y)) - T(\omega^2 y) = 0$$</p>
+<h5 id="3-the-wiring-is-correct">(3): The wiring is correct</h5>
+<p>If you look at the circuit (or the table) you will notice that some outputs become inputs on other gates. Prover will have to prove that this wiring has been done correctly</p>
+<p>For that, the wires of $C$ are encoded with respect to their constraints</p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_9.png" alt="Image alt"></p>
+<p>Now, we define a polynomial $W: \Omega \to \Omega$ that implements a rotation: $$W(\omega^{-2}, \omega^1, \omega^3) = (\omega^1, \omega^3, \omega^{-2}), W(\omega^{-1}, \omega^0) = (\omega^0, \omega^{-1})$$</p>
+<p><strong>Lemma</strong>: $\forall y \in \Omega: T(y) = T(W(y))$ =&gt; wire constraints are satisfied</p>
+<p>We can prove this lemma by using a prescribed permutation check</p>
+<h5 id="4-output-of-last-gate-is-0">(4): Output of last gate is 0</h5>
+<p>Proving the last one is easy, just show that $T(\omega^{3|C| - 1}) = 0$.</p>
+<h4 id="final-step-the-plonk-poly-iop">Final step: The PLONK Poly-IOP</h4>
+<p><strong>Setup</strong>: Preprocess the circuit $C$ and outputs $comm_S, comm_W$, which are the selector polynomial $S$ and the wiring polynomial $W$. It is <strong>untrusted</strong> that everyone can check these commitments were done correctly</p>
+<p><strong>Protocol</strong>:</p>
+<ul>
+<li>
+<p>Prover $P$ compiles the circuit to a computation trace, and encodes the entire trace into a polynomial $T(X)$</p>
+</li>
+<li>
+<p>Verifier $V$ can construct $v(X)$ explicitly from the public inputs $x$</p>
+</li>
+<li>
+<p>Then $P$ proves validity of $T$</p>
+<ul>
+<li>
+<p>gates: evaluated correctly by <strong>ZeroTest</strong></p>
+</li>
+<li>
+<p>inputs: correct inputs by <strong>ZeroTest</strong></p>
+</li>
+<li>
+<p>wires: correct wirings by <strong>Prescribed Permutation Check</strong></p>
+</li>
+<li>
+<p>output: correct output by <strong>evaluation proof</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp4/zkp4_10.png" alt="Image alt"></p>
+<p><strong>Theorem</strong>:</p>
+<p>The Plonk Poly-IOP is complete and knowledge sound, assuming $7|C|/p$ is negligible</p>
+<h4 id="extension-of-plonk">Extension of PLONK</h4>
+<p>The main challenge is to reduce the prover time.</p>
+<p><strong>Hyperplonk</strong>: linear prover</p>
+<ul>
+<li>
+<p>Replace $\Omega$ with $\lbrace 0, 1 \rbrace^t$, where $t = \log_2|\Omega|$</p>
+</li>
+<li>
+<p>The polynomial $T$ is now a multilinear polynomial in $t$ variables</p>
+</li>
+<li>
+<p>ZeroTest is replaced by a multilinear SumCheck (linear time)</p>
+</li>
+</ul>
+<p><strong>Plonkish Arithmetization</strong>: Custom gates and Plonkup</p>
+<ul>
+<li>
+<p>We can use custom gates other than addition gates and multiplication gates. This is used in AIR (Algebraic Intermediate Representation). An example custom gate is: $$\forall y \in \Omega _{gates}: v(y\omega) + v(y)t(y) - t(y\omega) = 0$$</p>
+</li>
+<li>
+<p>Plonkup enables one to ensure that some values in the computation trace are present in a pre-defined list, basically acting like a look-up argument</p>
+</li>
+</ul>
+
+    
+  </article>
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  
+
+<div id="sharingbuttons">
+    
+    
+    <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Zero%20Knowledge%20Proof%3a%20The%20PLONK%20SNARK&amp;url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="mailto:?subject=Zero%20Knowledge%20Proof%3a%20The%20PLONK%20SNARK&amp;body=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f" target="_self" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM7.25 14.43l-3.5 2c-.08.05-.17.07-.25.07-.17 0-.34-.1-.43-.25-.14-.24-.06-.55.18-.68l3.5-2c.24-.14.55-.06.68.18.14.24.06.55-.18.68zm4.75.07c-.1 0-.2-.03-.27-.08l-8.5-5.5c-.23-.15-.3-.46-.15-.7.15-.22.46-.3.7-.14L12 13.4l8.23-5.32c.23-.15.54-.08.7.15.14.23.07.54-.16.7l-8.5 5.5c-.08.04-.17.07-.27.07zm8.93 1.75c-.1.16-.26.25-.43.25-.08 0-.17-.02-.25-.07l-3.5-2c-.24-.13-.32-.44-.18-.68s.44-.32.68-.18l3.5 2c.24.13.32.44.18.68z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f&amp;resubmit=true&amp;title=Zero%20Knowledge%20Proof%3a%20The%20PLONK%20SNARK" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 11.5c0-1.65-1.35-3-3-3-.96 0-1.86.48-2.42 1.24-1.64-1-3.75-1.64-6.07-1.72.08-1.1.4-3.05 1.52-3.7.72-.4 1.73-.24 3 .5C17.2 6.3 18.46 7.5 20 7.5c1.65 0 3-1.35 3-3s-1.35-3-3-3c-1.38 0-2.54.94-2.88 2.22-1.43-.72-2.64-.8-3.6-.25-1.64.94-1.95 3.47-2 4.55-2.33.08-4.45.7-6.1 1.72C4.86 8.98 3.96 8.5 3 8.5c-1.65 0-3 1.35-3 3 0 1.32.84 2.44 2.05 2.84-.03.22-.05.44-.05.66 0 3.86 4.5 7 10 7s10-3.14 10-7c0-.22-.02-.44-.05-.66 1.2-.4 2.05-1.54 2.05-2.84zM2.3 13.37C1.5 13.07 1 12.35 1 11.5c0-1.1.9-2 2-2 .64 0 1.22.32 1.6.82-1.1.85-1.92 1.9-2.3 3.05zm3.7.13c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9.8 4.8c-1.08.63-2.42.96-3.8.96-1.4 0-2.74-.34-3.8-.95-.24-.13-.32-.44-.2-.68.15-.24.46-.32.7-.18 1.83 1.06 4.76 1.06 6.6 0 .23-.13.53-.05.67.2.14.23.06.54-.18.67zm.2-2.8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm5.7-2.13c-.38-1.16-1.2-2.2-2.3-3.05.38-.5.97-.82 1.6-.82 1.1 0 2 .9 2 2 0 .84-.53 1.57-1.3 1.87z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="whatsapp://send?text=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.1 3.9C17.9 1.7 15 .5 12 .5 5.8.5.7 5.6.7 11.9c0 2 .5 3.9 1.5 5.6L.6 23.4l6-1.6c1.6.9 3.5 1.3 5.4 1.3 6.3 0 11.4-5.1 11.4-11.4-.1-2.8-1.2-5.7-3.3-7.8zM12 21.4c-1.7 0-3.3-.5-4.8-1.3l-.4-.2-3.5 1 1-3.4L4 17c-1-1.5-1.4-3.2-1.4-5.1 0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.7 2.8 1.8 1.8 2.8 4.2 2.8 6.7-.1 5.2-4.3 9.4-9.5 9.4zm5.1-7.1c-.3-.1-1.7-.9-1.9-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.4c-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6s.3-.3.4-.5c.2-.1.3-.3.4-.5.1-.2 0-.4 0-.5C10 9 9.3 7.6 9 7c-.1-.4-.4-.3-.5-.3h-.6s-.4.1-.7.3c-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.3-.3-.4-.6-.5z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f&amp;t=Zero%20Knowledge%20Proof%3a%20The%20PLONK%20SNARK" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path fill-rule="evenodd" d="M60.94 82.314L17 0h20.08l25.85 52.093c.397.927.86 1.888 1.39 2.883.53.994.995 2.02 1.393 3.08.265.4.463.764.596 1.095.13.334.262.63.395.898.662 1.325 1.26 2.618 1.79 3.877.53 1.26.993 2.42 1.39 3.48 1.06-2.254 2.22-4.673 3.48-7.258 1.26-2.585 2.552-5.27 3.877-8.052L103.49 0h18.69L77.84 83.308v53.087h-16.9v-54.08z"></path></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Zero%20Knowledge%20Proof%3a%20The%20PLONK%20SNARK&amp;url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp4%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.707 8.475C.275 8.64 0 9.508 0 9.508s.284.867.718 1.03l5.09 1.897 1.986 6.38a1.102 1.102 0 0 0 1.75.527l2.96-2.41a.405.405 0 0 1 .494-.013l5.34 3.87a1.1 1.1 0 0 0 1.046.135 1.1 1.1 0 0 0 .682-.803l3.91-18.795A1.102 1.102 0 0 0 22.5.075L.706 8.475z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+</div>
+  <div class="paginator">
+    
+    <a class="link" href="https://michaelneuper.github.io/posts/kalmar2024/" title="KalmarCTF 2024">← prev</a>
+    
+    
+    <a class="link" href="https://michaelneuper.github.io/posts/zkp5/" title="Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem">next →</a>
+    
+  </div>
+  <div class="comment">
+    
+    
+    
+    <script src="https://giscus.app/client.js"
+    data-repo="michaelneuper/hugo-texify3"
+    data-repo-id="R_kgDOIjPNaQ"
+    data-category="General"
+    data-category-id="DIC_kwDOIjPNac4CaklA"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme=""
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+</script>
+
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div>
+    <span>Powered by  <a class=link href=https://gohugo.io target=_blank rel=noopener>Hugo</a> | 
+Theme <a class=link href=https://github.com/michaelneuper/hugo-texify3 target=_blank rel=noopener>TeXify3</a>
+</span>
+  </div>
+  <div>
+    <span>Copyright © 2025 Michael Neuper</span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='https://michaelneuper.github.io/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

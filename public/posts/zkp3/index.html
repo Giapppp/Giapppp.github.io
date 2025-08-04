@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="Michael Neuper">
+
+  
+  
+  <meta name="description" content="In this post, we will dig deeper about Interactive Proofs, which was described in my previous post.
+Resources ZKP MOOC Lecture 4: Interactive Proofs
+Computational Complexity: A Modern Approach, Chapter 8
+Cryptonote-Ehrant
+Chapters 3 and 4 of [Thaler]
+Detail Interactive Proofs: Motivation &amp; Model In an interactive proof, there are two parties: a prover $P$ and a verifier $V$
+$P$ solves problem, then tell $V$ the answer
+Then they start a conversation, and the goal of $P$ is convince $V$ the answer is correct">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="https://michaelneuper.github.io//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://michaelneuper.github.io//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://michaelneuper.github.io//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:title" content="Zero Knowledge Proof: Interactive Proofs" />
+<meta property="og:description" content="In this post, we will dig deeper about Interactive Proofs, which was described in my previous post.
+Resources ZKP MOOC Lecture 4: Interactive Proofs
+Computational Complexity: A Modern Approach, Chapter 8
+Cryptonote-Ehrant
+Chapters 3 and 4 of [Thaler]
+Detail Interactive Proofs: Motivation &amp; Model In an interactive proof, there are two parties: a prover $P$ and a verifier $V$
+$P$ solves problem, then tell $V$ the answer
+Then they start a conversation, and the goal of $P$ is convince $V$ the answer is correct" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://michaelneuper.github.io/posts/zkp3/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2025-03-28T00:00:22+07:00" /><meta property="og:site_name" content="Giap&#39;s Blog" />
+
+
+
+  
+  <link rel="canonical" href="https://michaelneuper.github.io/posts/zkp3/">
+
+  
+  
+  <meta itemprop="name" content="Zero Knowledge Proof: Interactive Proofs">
+<meta itemprop="description" content="In this post, we will dig deeper about Interactive Proofs, which was described in my previous post.
+Resources ZKP MOOC Lecture 4: Interactive Proofs
+Computational Complexity: A Modern Approach, Chapter 8
+Cryptonote-Ehrant
+Chapters 3 and 4 of [Thaler]
+Detail Interactive Proofs: Motivation &amp; Model In an interactive proof, there are two parties: a prover $P$ and a verifier $V$
+$P$ solves problem, then tell $V$ the answer
+Then they start a conversation, and the goal of $P$ is convince $V$ the answer is correct"><meta itemprop="datePublished" content="2024-03-07T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2025-03-28T00:00:22+07:00" />
+<meta itemprop="wordCount" content="2725">
+<meta itemprop="keywords" content="Learning,ZKP," />
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.e562d763c6d0825495eb17de8b2c1d9800cf7c08db1c36accedf77a5fccfc4b9.css" integrity="sha256-5WLXY8bQglSV6xfeiywdmADPfAjbHDaszt93pfzPxLk=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.ba38eba94cb47fef9936258c42d11ff19fa9686a30b38e783773fe3f15eb44dc.css" integrity="sha256-ujjrqUy0f&#43;&#43;ZNiWMQtEf8Z&#43;paGows454N3P&#43;PxXrRNw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Zero Knowledge Proof: Interactive Proofs - Giap&#39;s Blog</title>
+  
+
+  
+  <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Zero Knowledge Proof: Interactive Proofs"/>
+<meta name="twitter:description" content="In this post, we will dig deeper about Interactive Proofs, which was described in my previous post.
+Resources ZKP MOOC Lecture 4: Interactive Proofs
+Computational Complexity: A Modern Approach, Chapter 8
+Cryptonote-Ehrant
+Chapters 3 and 4 of [Thaler]
+Detail Interactive Proofs: Motivation &amp; Model In an interactive proof, there are two parties: a prover $P$ and a verifier $V$
+$P$ solves problem, then tell $V$ the answer
+Then they start a conversation, and the goal of $P$ is convince $V$ the answer is correct"/>
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.be779f459ad7e3aaf8afd0f80c6a61ca6c50993f5f18512532100ac6d93f0fa9.css" integrity="sha256-vnefRZrX46r4r9D4DGphymxQmT9fGFElMhAKxtk/D6k=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="https://michaelneuper.github.io/">Giap&#39;s Blog</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+        <span class="icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17,11H16a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm0,4H16a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2ZM11,9h6a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2ZM21,3H7A1,1,0,0,0,6,4V7H3A1,1,0,0,0,2,8V18a3,3,0,0,0,3,3H18a4,4,0,0,0,4-4V4A1,1,0,0,0,21,3ZM6,18a1,1,0,0,1-2,0V9H6Zm14-1a2,2,0,0,1-2,2H7.82A3,3,0,0,0,8,18V5H20Zm-9-4h1a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2Zm0,4h1a1,1,0,0,0,0-2H11a1,1,0,0,0,0,2Z"/></svg>
+</span>
+      
+      <a class="link" href="/posts/">Blog</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+        <span class="icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+<path d="M10.07031,20.50291a1.00008,1.00008,0,0,0-1.18115-.9834c-1.30908.24024-2.96191.27637-3.40137-.958a5.70754,5.70754,0,0,0-1.83691-2.415,1.20073,1.20073,0,0,1-.1665-.10938,1,1,0,0,0-.93067-.64551H2.54883a.99965.99965,0,0,0-1,.99512c-.00391.81543.811,1.33789,1.1416,1.51465a4.4408,4.4408,0,0,1,.92383,1.35937c.36426,1.02344,1.42285,2.57617,4.46582,2.376.001.03516.00195.06836.00244.09863l.00439.26758a1,1,0,0,0,2,0l-.00488-.31836C10.07715,21.4951,10.07031,21.22068,10.07031,20.50291Zm10.667-15.126c.03174-.125.063-.26367.09034-.41992a6.27792,6.27792,0,0,0-.40821-3.293,1.002,1.002,0,0,0-.61572-.58007c-.356-.12012-1.67041-.35645-4.18408,1.25a13.86918,13.86918,0,0,0-6.354,0C6.76221.751,5.45459.9658,5.10205,1.07908a.99744.99744,0,0,0-.63135.584,6.3003,6.3003,0,0,0-.40332,3.35644c.02442.12793.05078.2461.07813.35449A6.26928,6.26928,0,0,0,2.89014,9.20311a8.42168,8.42168,0,0,0,.04248.92187c.334,4.60254,3.334,5.98438,5.42431,6.459-.04345.125-.083.25878-.11816.40039a1.00023,1.00023,0,0,0,1.94238.47851,1.6784,1.6784,0,0,1,.46778-.87793.99947.99947,0,0,0-.5459-1.74512c-3.4541-.39453-4.95362-1.80175-5.1792-4.89843a6.61076,6.61076,0,0,1-.03369-.73828,4.25769,4.25769,0,0,1,.91943-2.71289,3.022,3.022,0,0,1,.1958-.23145.99988.99988,0,0,0,.188-1.02441,3.3876,3.3876,0,0,1-.15527-.55567A4.09356,4.09356,0,0,1,6.1167,3.06346a7.54263,7.54263,0,0,1,2.415,1.17968,1.00877,1.00877,0,0,0,.82764.13282,11.77716,11.77716,0,0,1,6.17285.001,1.00549,1.00549,0,0,0,.83056-.13769,7.572,7.572,0,0,1,2.40528-1.19043,4.03977,4.03977,0,0,1,.0874,1.57812,3.205,3.205,0,0,1-.16895.60743.9999.9999,0,0,0,.188,1.02441c.07715.08691.1543.18066.22363.26855A4.12186,4.12186,0,0,1,20,9.20311a7.03888,7.03888,0,0,1-.0376.77734c-.22021,3.05566-1.72558,4.46387-5.1958,4.85937a1,1,0,0,0-.54541,1.7461,1.63079,1.63079,0,0,1,.46631.9082,3.06079,3.06079,0,0,1,.09229.81934v2.334C14.77,21.2949,14.77,21.78025,14.77,22.00291a1,1,0,1,0,2,0c0-.2168,0-.69238.00977-1.33984V18.31346a4.8815,4.8815,0,0,0-.15479-1.31153,4.25638,4.25638,0,0,0-.11621-.416,6.51258,6.51258,0,0,0,5.44531-6.42383A8.69677,8.69677,0,0,0,22,9.20311,6.13062,6.13062,0,0,0,20.7373,5.37693Z"/></svg>
+</span>
+      
+      <a class="link" href="https://github.com/Giapppp">GitHub</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">Zero Knowledge Proof: Interactive Proofs</h1>
+    <div class="publish-metadata">
+      
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      7 March 2024
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          2725 words
+        </span>
+      
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~13 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  <div>
+    
+    <a class="link tag" href='https://michaelneuper.github.io/tags/learning'>#Learning</a>
+    
+    <a class="link tag" href='https://michaelneuper.github.io/tags/zkp'>#ZKP</a>
+    
+    <br></br>
+  </div>
+  
+  
+  
+  <details>
+    <summary>
+      <b>Table of Contents</b>
+    </summary>
+    <div class="toc numbered-subtitles"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#detail">Detail</a>
+      <ul>
+        <li><a href="#interactive-proofs-motivation--model">Interactive Proofs: Motivation &amp; Model</a>
+          <ul>
+            <li><a href="#soundness--knowledge-soundness">Soundness &amp; Knowledge Soundness</a></li>
+            <li><a href="#public-verifiability">Public Verifiability</a></li>
+          </ul>
+        </li>
+        <li><a href="#snarks-from-interactive-proofs-outline">SNARKs from interactive proofs: outline</a>
+          <ul>
+            <li><a href="#recall-the-trivial-snark-is-not-a-snark">Recall: The trivial SNARK is not a SNARK</a></li>
+            <li><a href="#snarks-from-interactive-proofs-ips">SNARKs from Interactive Proofs (IPs)</a></li>
+            <li><a href="#actual-snarks">Actual SNARKs</a></li>
+          </ul>
+        </li>
+        <li><a href="#review-of-functional-commitments">Review of functional commitments</a>
+          <ul>
+            <li><a href="#merkle-trees-the-commitment">Merkle Trees: The commitment</a></li>
+            <li><a href="#a-first-polynomial-commitment-commit-to-a-univariate-fx-in-mathbbf_7le-dx">A First Polynomial commitment: commit to a univariate f(X) in $\mathbb{F}_7^{\le d}[X]$</a></li>
+          </ul>
+        </li>
+        <li><a href="#interactive-proof-design-technical-preliminaries">Interactive proof design: Technical preliminaries</a>
+          <ul>
+            <li><a href="#recap-szdl-lemma">Recap: SZDL Lemma</a></li>
+            <li><a href="#low-degree-and-multilinear-extensions">Low-Degree and Multilinear Extensions</a></li>
+            <li><a href="#evaluating-multilinear-extensions-quickly">Evaluating multilinear extensions quickly</a></li>
+          </ul>
+        </li>
+        <li><a href="#the-sum-check-protocol">The sum-check protocol</a>
+          <ul>
+            <li><a href="#analysis-of-the-sum-check-protocol--costs">Analysis of the sum-check protocol &amp; costs</a></li>
+            <li><a href="#application-counting-triangles-in-a-graph">Application: Counting Triangles in a graph</a></li>
+          </ul>
+        </li>
+        <li><a href="#a-snark-for-circuit-satisfiability">A SNARK for circuit-satisfiability</a></li>
+        <li><a href="#the-polynomial-iop-underlying-the-snark">The polynomial IOP underlying the SNARK</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  </details>
+  
+  
+  <article class="content numbered-subtitles">
+    
+    <p>In this post, we will dig deeper about Interactive Proofs, which was described in <a href="https://giapppp.github.io/posts/zkp1/">my previous post</a>.</p>
+<h2 id="resources">Resources</h2>
+<p><a href="https://www.youtube.com/watch?v=4018OYyoAf8">ZKP MOOC Lecture 4: Interactive Proofs</a></p>
+<p><a href="https://theory.cs.princeton.edu/complexity/book.pdf">Computational Complexity: A Modern Approach, Chapter 8</a></p>
+<p><a href="https://crypto-notes-erhant.vercel.app/zklearning/snarks-via-ips.html#relation-to-interactive-proofs">Cryptonote-Ehrant</a></p>
+<p><a href="https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.pdf">Chapters 3 and 4 of [Thaler]</a></p>
+<h2 id="detail">Detail</h2>
+<h3 id="interactive-proofs-motivation--model">Interactive Proofs: Motivation &amp; Model</h3>
+<p>In an interactive proof, there are two parties: a prover $P$ and a verifier $V$</p>
+<ul>
+<li>
+<p>$P$ solves problem, then tell $V$ the answer</p>
+</li>
+<li>
+<p>Then they start a conversation, and the goal of $P$ is convince $V$ the answer is correct</p>
+</li>
+</ul>
+<p>There are some requirements for interactive proof</p>
+<ul>
+<li>
+<p><strong>Completeness:</strong> an honest $P$ can convince $V$ that the answer is correct</p>
+</li>
+<li>
+<p><strong>(Statistical) Soundness:</strong> $V$ will catch a lying $P$ with high probability. This must hold even if $P$ is computationally unbound and trying to trick $V$ into accept incorrect answer</p>
+</li>
+</ul>
+<p>If soundness holds only against polynomial-time provers, then the protocol is called an <strong>interactive argument</strong></p>
+<h4 id="soundness--knowledge-soundness">Soundness &amp; Knowledge Soundness</h4>
+<p>We will compare <strong>soundness</strong> and <strong>knowledge soundness</strong> for circuit-satisfiability</p>
+<p>Let $C$ be some public arithmetic circuit $$C(x, w) \to \mathbb{F}$$ where $x \in \mathbb{F}^n$ is some public statement and $w \in \mathbb{F}^m$ is some secret witness. Let us look at the types of &ldquo;soundness&rdquo; with this example:</p>
+<ul>
+<li>
+<p><strong>Soundness:</strong> $V$ accepts $\implies \exists w: C(x, w) = 0$</p>
+</li>
+<li>
+<p><strong>Knowledge Soundness:</strong> $V$ accepts $\implies P \ {&ldquo;knows&rdquo;} \ w: C(x, w) = 0$</p>
+</li>
+</ul>
+<p>Therefore, we can see that knowledge soundness is stronger, because the verifier must know witness</p>
+<p>But standard soundness is meaningful even in contexts where knowledge soundness isn&rsquo;t, an example is $P$ claims the output of $V$&rsquo;s program on $x$ is 42. Knowledge soundness isn&rsquo;t meaningful at below example because there&rsquo;s no natural witness</p>
+<p>Vice-versa, knowledge soundness is meaningful in contexts where standard soundness isn&rsquo;t. For example, $P$ claims to know the secret key that controls a certain bitcoin wallet. In this one, there does exist a private key to that account for sure, so if using soundness, the verifier can just ignore the verifier and accept, but when using knowledge soundness, $P$ must know the witness</p>
+<p>SNARK&rsquo;s that don&rsquo;t have knowledge soundness are called SNARGs, and they are studied too!</p>
+<h4 id="public-verifiability">Public Verifiability</h4>
+<p>Interactive proofs and arguments only convince the party that is choosing/sending the random challenges, and this is bad if there are many verifiers, cuz the prover would have to convince each verifier separately</p>
+<p>To deal with this problem, we can use Fiat-Shamir Transform <a href="https://link.springer.com/content/pdf/10.1007/3-540-47721-7_12.pdf">Fiat, Shamir 87&rsquo;</a> to makes the protocol non-interactive and publicly verifiable</p>
+<p>In summary</p>
+<table>
+<thead>
+<tr>
+<th>SNARKs</th>
+<th>Interactive Proofs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non-interactive</td>
+<td>Interactive</td>
+</tr>
+<tr>
+<td>Computationally Secure (?)</td>
+<td>Information Theoretically Secure (aka Statistically Secure)</td>
+</tr>
+<tr>
+<td>Knowledge Sound</td>
+<td>Not necessary need Knowledge Sound</td>
+</tr>
+</tbody>
+</table>
+<h3 id="snarks-from-interactive-proofs-outline">SNARKs from interactive proofs: outline</h3>
+<h4 id="recall-the-trivial-snark-is-not-a-snark">Recall: The trivial SNARK is not a SNARK</h4>
+<p>(a) Prover sends $w$ to verifier</p>
+<p>(b) Verifier checks if $C(x, w) = 0$</p>
+<p><strong>Problems with this:</strong></p>
+<p>(1) $w$ might be long: we want a &ldquo;short&rdquo; proof</p>
+<p>(2) Computing $C(x, w)$ maybe hard: we want a &ldquo;fast&rdquo; verifier</p>
+<h4 id="snarks-from-interactive-proofs-ips">SNARKs from Interactive Proofs (IPs)</h4>
+<ul>
+<li>
+<p>Slight less trivial: $P$ sends $w$ to $V$, and uses an IP to prove that $w$ satisfies the claimed property</p>
+<ul>
+<li>Fast $V$, but proof is still too long</li>
+</ul>
+</li>
+</ul>
+<h4 id="actual-snarks">Actual SNARKs</h4>
+<p>What actually happens in SNARKs is that, instead of sending $w$ explicitly, the prover will cryptographically commit to $w$ and send that commitment.</p>
+<ul>
+<li>
+<p>$P$ uses an IP to prove that $w$ satisfies the claimed property</p>
+</li>
+<li>
+<p>The prover will reveal <strong>just enough</strong> information about the committed witness $w$ to allow $V$ to run its checks in the IP</p>
+</li>
+<li>
+<p>The proof can be made non-interactive using Fiat-Shamir transform</p>
+</li>
+</ul>
+<h3 id="review-of-functional-commitments">Review of functional commitments</h3>
+<p>From previous lecture, we had talked about three important functional commitments</p>
+<ul>
+<li>
+<p><strong>Polynomial commitments:</strong> commit to a <u>univariate</u> $f(X)$ in $\mathbb{F}_p^{(\le d)}[X]$</p>
+</li>
+<li>
+<p><strong>Multilinear commitments:</strong> commit to multilinear $f$ in $\mathbb{F}_p^{\le 1}[X_1,&hellip;,X_k]$</p>
+</li>
+<li>
+<p><strong>Vector commitments (e.g. Merkle Trees):</strong> commit to $\overrightarrow{c} = (u_1,&hellip;u_d) \in \mathbb{F}_p^d$</p>
+</li>
+</ul>
+<p>Now, we will discuss more about each one of them</p>
+<h4 id="merkle-trees-the-commitment">Merkle Trees: The commitment</h4>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_1.png" alt="Image alt"></p>
+<p>In this binary tree, every node is made up of the hash of its children:</p>
+<ul>
+<li>
+<p><code>m1 = H(M, Y)</code></p>
+</li>
+<li>
+<p><code>h2 = H(m3, m4)</code></p>
+</li>
+<li>
+<p><code>k1 = H(h1, h2)</code></p>
+</li>
+</ul>
+<p>The root <code>k1</code> is the <strong>commitment</strong> to this vector</p>
+<p>When the prover is asked to show that indeed some element of the vector exists at some position, it will provide only the necessary nodes.</p>
+<p>For example, a verifier could ask &ldquo;is there really a <code>t</code> as position 6?&rdquo;. The prover will give <code>c</code>, <code>t</code>, <code>h7</code> and <code>h2</code> and the verifier will calculate <code>m4</code>, <code>h1</code>, <code>k1</code>. Then, the verifier will compare the calculate <code>h1</code> to the root given as a commitment by the prover. If they match, then <code>t</code> is indeed at that specific position in the committed vector</p>
+<p>Summary, we have:</p>
+<ul>
+<li>
+<p>Commitment to vector is root hash</p>
+</li>
+<li>
+<p>To open an entry of the committed vector (leaf of the tree):</p>
+<ul>
+<li>
+<p>Send sibling hashes of all nodes on root-to-leaf path</p>
+</li>
+<li>
+<p>$V$ checks these are consistent with the root hash</p>
+</li>
+<li>
+<p>&ldquo;Opening proof&rdquo; size is O(log n) hash values</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Binding: one the root hash is sent, the committer is bound to a fixed vector</p>
+<ul>
+<li>Opening any leaf to two different values requires finding a hash collision (assumed to be intractable)</li>
+</ul>
+</li>
+</ul>
+<h4 id="a-first-polynomial-commitment-commit-to-a-univariate-fx-in-mathbbf_7le-dx">A First Polynomial commitment: commit to a univariate f(X) in $\mathbb{F}_7^{\le d}[X]$</h4>
+<p>Suppose that we have a polynomial $f(x) \in \mathbb{F}_7^{\le d} [X]$, so this polynomial has values defined onver a very small $n = 7$. The degree should be small too, say something like $d = 3$</p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_2.png" alt="Image alt"></p>
+<ul>
+<li>
+<p>$P$ Merkle-commits to all evaluations of the polynomial $f$</p>
+</li>
+<li>
+<p>When $V$ requests $f(r)$, $P$ reveals the associated leaf along with opening information</p>
+</li>
+</ul>
+<p>There exists two problems in this method:</p>
+<ol>
+<li>
+<p>The number of leaves is $|\mathbb{F}|$, which means the time to compute the commitment is at least $|\mathbb{F}|$</p>
+<ul>
+<li>Big problem when working over large fields (say, $|\mathbb{F}| \approx 2^{64}$ or $|\mathbb{F}| \approx 2^{128}$)</li>
+</ul>
+</li>
+<li>
+<p>$V$ does not know if $f$ has degree at most $d$</p>
+</li>
+</ol>
+<p>We will see ways to solve these problems within the lecture</p>
+<h3 id="interactive-proof-design-technical-preliminaries">Interactive proof design: Technical preliminaries</h3>
+<h4 id="recap-szdl-lemma">Recap: SZDL Lemma</h4>
+<ul>
+<li>
+<p><strong>Fact:</strong> Let $p \ne q$ be univariate polynomials of degree at most $d$. Then $Pr_{r \in \mathbb{F}}[p(r) = q(r)] \le \frac{d}{|\mathbb{F}|}$</p>
+</li>
+<li>
+<p>The <strong>Schwarts-Zippel-Demillo-Lipton lemma</strong> is a multivariate generalization:</p>
+<ul>
+<li>
+<p>Let $p \ne q$ be a $l$-variate polynomials of total degree at most $d$. Then $Pr_{r \in \mathbb{F}^l[p(r) = q(r)]} \le \frac{d}{|\mathbb{F}|}$</p>
+</li>
+<li>
+<p>&ldquo;Total degree&rdquo; refers to the maximum sum of degrees of all variables in any term. E.g., $x_1^2 x_2 + x_1 x_2$ has total degree 3</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="low-degree-and-multilinear-extensions">Low-Degree and Multilinear Extensions</h4>
+<ul>
+<li>
+<p>Definition <strong>[Extension].</strong> Given a function $f:{0, 1}^l \to \mathbb{F}$, a $l$-variate polynomial $g$ over $\mathbb{F}$ is said to <strong>extend</strong> $f$ if $f(x) = g(x)$ for all $x \in {0, 1}^l$</p>
+</li>
+<li>
+<p>Definition <strong>[Multilinear Extensions].</strong> Any function $f:{0, 1}^l \in \mathbb{F}$ has a <strong>unique</strong> multilinear extension (MLE), denoted $\tilde{f}$</p>
+<ul>
+<li>
+<p>Multilinear means the polynomial has degree at most 1 in each variable</p>
+</li>
+<li>
+<p>$(1 - x_1)(1 - x_2)$ is multilinear, $x_1^2x_2$ is not</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_3.png" alt="Image alt"></p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_4.png" alt="Image alt"></p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_5.png" alt="Image alt"></p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_6.png" alt="Image alt"></p>
+<h4 id="evaluating-multilinear-extensions-quickly">Evaluating multilinear extensions quickly</h4>
+<p>Given as input all $2^l$ evaluations of a function $f: {0, 1}^l \to \mathbb{F}$, for any point $r \in \mathbb{F}^l$ there is an $\mathcal{O}(2^l)$-time algorithm for evaluating the MLE $\tilde{f}(r)$</p>
+<p>We will use <strong>Lagrange Interpolation</strong>. For every input $\omega = (\omega_1, \omega_2,&hellip;,\omega_l) \in {0, 1}^l$, define the multilinear <strong>Lagrange Basis polynomial</strong> as follow $$\tilde{\delta} _ {\omega}(r) = \prod _ {i=1}^{l}(r_i\omega_i + (1 - r_i)(1 - \omega_i))$$</p>
+<p>So we can get the evaluation of $\tilde{f}(r)$ using these: $$f(r) = \sum _ {\omega \in \lbrace 0, 1 \rbrace^l}f(\omega) \times \tilde{\delta} _ {\omega}(r)$$</p>
+<p>For each $\omega \in {0, 1}^l$, the result $\tilde{\delta} _ {\omega}(r)$ can be computed with $\mathcal{O}(l)$ field operations. As such, the overall algorithm for $2^l$ points takes time $\mathcal{O}(l2^l)$. Using dynamic programming, this can be reduced to $\mathcal{O}(2^l)$</p>
+<h3 id="the-sum-check-protocol">The sum-check protocol</h3>
+<p>We are going to work with the sum-check protocol <a href="https://dl.acm.org/doi/10.1145/146585.146605">Lund-Fortnow-Karloff-Nissan'90</a>.</p>
+<p>The verifier $V$ given oracle access to a $l$-variate polynomial $g$ over field $\mathbb{F}$, and the goal of $V$ is compute the quantity: $$\sum _{b_1 \in \lbrace 0, 1 \rbrace} \sum _ {b_2 \in \lbrace 0, 1 \rbrace} &hellip; \sum _ {b_l \in \lbrace 0, 1 \rbrace} g(b_1, b_2,&hellip;,b_l)$$</p>
+<p>In the naive method, the verifier would query each input, and find the sum in a total of $2^l$ queries. We will consider this to be a costly operation</p>
+<p>Instead, a prover will compute the sum and convince a verifier that this sum is correct. In doing so, the verifier will make only a single query to the oracle! Let&rsquo;s see how. Denote $P$ as prover and $V$ as verifier</p>
+<ul>
+<li><strong>Start:</strong> $P$ sends the claimed answer $C_1$. The protocol must check that indeed:</li>
+</ul>
+<p>$$C_1 = \sum _ {b_1 \lbrace 0, 1 \rbrace} \sum _ {b_2 \lbrace 0, 1 \rbrace} &hellip; \sum _ {b_l \lbrace 0, 1 \rbrace} g(b_1, b_2,&hellip;,b_l)$$</p>
+<ul>
+<li><strong>Round 1:</strong> $P$ sends <strong>univariate</strong> polynomial $s_1(X_1)$ claimed to equal $H_1(X_1)$ (H standing for honest):</li>
+</ul>
+<p>$$H_1(X_1) =  \sum _ {b_1 \lbrace 0, 1 \rbrace} \sum _ {b_2 \lbrace 0, 1 \rbrace} &hellip; \sum _ {b_l \lbrace 0, 1 \rbrace} g(X_1, b_2,&hellip;,b_l)$$</p>
+<p>&ndash; $V$ need to check two things:</p>
+<ol>
+<li>
+<p>Does $s_1$ equal $H_1$ ?</p>
+</li>
+<li>
+<p>If $s_1$ does equal $H_1$, is that consistent with the true answer being $C_1$ ?</p>
+</li>
+</ol>
+<p>&ndash; For the second question, the verifier simply checks that $C_1 = s_1(0) + s_1(1)$. If this check passes, it is safe for $V$ to believe that $C_1$ is the correct answer, so long as $V$ believes that $s_1 = H_1$</p>
+<p>&ndash; For the first question, $V$ just check that $s_1$ and $H_1$ agree at a random point $r_1$</p>
+<p>&ndash; Remember that, $V$ can compute $s_1(r_1)$ directly from $P$&rsquo;s first message, but not $H_1(r_1)$</p>
+<ul>
+<li>
+<p><strong>Round 2:</strong> They recursively check that $s_1(r_1) = H_1(r_1)$. i.e., that $$s_1(r_1) = = \sum _ {b_2 \lbrace 0, 1 \rbrace} &hellip; \sum _ {b_l \lbrace 0, 1 \rbrace} g(r_1, b_2,&hellip;,b_l)$$</p>
+</li>
+<li>
+<p><strong>Recursion into Rounds 3,4,&hellip;,$l$:</strong> The verifier and prover keep doing this until the last round</p>
+</li>
+<li>
+<p><strong>Final Round (Round $l$):</strong> $P$ sends univariate polynomial $s_l(X_l)$ claimed to equal $$H_l := g(r_1,&hellip;,r_{l-1}, X_l)$$</p>
+</li>
+</ul>
+<p>&ndash; $V$ checks that $s_{l-1}(r_{l-1}) = s_l(0) + s_l(1)$</p>
+<p>&ndash; $V$ picks $r_l$ at random, and needs to check that $s_l(r_l) = g(r_1,&hellip;,r_l)$</p>
+<ul>
+<li>The verifier doesn&rsquo;t need for more rounds, because $V$ can perform this check with one oracle query</li>
+</ul>
+<h4 id="analysis-of-the-sum-check-protocol--costs">Analysis of the sum-check protocol &amp; costs</h4>
+<ul>
+<li>
+<p><strong>Completeness:</strong> It holds by design: If $P$ sends the prescribed messages, then all of $V$&rsquo;s checks will pass</p>
+</li>
+<li>
+<p><strong>Soundness:</strong> If $P$ does not send the prescribed messages, then $V$ rejects with probability at least $1 - \frac{ld}{| \mathbb{F} |}$, where $d$ is the maximum degree of $g$ in any variable. You can proof by induction on the number of variables $l$</p>
+</li>
+<li>
+<p>Total communication is $\mathcal{O}(dl)$ field elements</p>
+<ul>
+<li>
+<p>$P$ sends $l$ messages, each a univariate polynomial of degree at most $d$. $V$ sends $l - 1$ messages, each consisting of one field element</p>
+</li>
+<li>
+<p>$V$&rsquo;s runtime is: $$\mathcal{O}(dl + [time \ required \ to \ evaluate \ g \ at \ one \ point])$$</p>
+</li>
+<li>
+<p>$P$&rsquo;s runtime is at most: $$\mathcal{O}(d * 2^l * [time \ required \ to \ evaluate \ g \ at \ one \ point])$$</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="application-counting-triangles-in-a-graph">Application: Counting Triangles in a graph</h4>
+<ul>
+<li>
+<p><strong>Input:</strong> $A \in \lbrace 0, 1 \rbrace^{n \times n}$, representing the adjacency matrix of a graph</p>
+</li>
+<li>
+<p><strong>Desired Output:</strong> $\sum_{(i, j, k) \in [n]^3} A_{ij}A_{jk}A_{ik}$</p>
+</li>
+<li>
+<p><strong>The Protocol:</strong></p>
+<ul>
+<li>
+<p>View $A$ as a function mapping ${0, 1}^{\log n} \times {0, 1}^{\log n}$ to $\mathbb{F}$</p>
+</li>
+<li>
+<p>Recall that $\tilde{A}$ denotes the multilinear extension of $A$</p>
+</li>
+<li>
+<p>Define the polynomial $g(X, Y, Z) = \tilde{A}(X, Y) \tilde{A}(Y, Z) \tilde{A}(X, Z)$</p>
+</li>
+<li>
+<p>Apply the sum-check protocol to $g$ to compute $$\sum_{(a, b, c) \in \lbrace 0, 1 \rbrace ^{3 \log n}} g(a, b, c)$$</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Costs:</strong></p>
+<ul>
+<li>
+<p>Total communication is $\mathcal{O}(\log n)$, $V$ runtime is $\mathcal{O}(n^2)$, $P$ runtime is $\mathcal{O}(n^3)$</p>
+</li>
+<li>
+<p>$V$&rsquo;s runtime dominated by evaluating: $$g(r_1, r_2, r_3) = \tilde{A}(r_1, r_2) \tilde{A}(r_2, r_3) \tilde{A}(r_1, r_3)$$</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="a-snark-for-circuit-satisfiability">A SNARK for circuit-satisfiability</h3>
+<p>We will use a notion of <strong>transcript</strong>, which is defined as an assignment of a value to every gate in the circuit. A transcript $T$ is a <strong>correct transcript</strong> if it assigns the gate values obtained by evaluating the circuit $C$ on a valid witness $\omega$</p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_7.png" alt="Image alt"></p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_8.png" alt="Image alt"></p>
+<p><img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp3/zkp3_9.png" alt="Image alt"></p>
+<h3 id="the-polynomial-iop-underlying-the-snark">The polynomial IOP underlying the SNARK</h3>
+<p>Recall that our SNARK is all about proving that we know a secret witness $\omega$ such that for some public input $x$ and arithmetic circuit $C$ it holds that $C(x, \omega) = 0$. Denote the circuit size as $S = |C|$</p>
+<ul>
+<li>
+<p>First, we will construct the <strong>correct transcript</strong> of $C(x, \omega)$, which we denote as $T: {0, 1}^{\log S} \to \mathbb{F}$.</p>
+</li>
+<li>
+<p>Prover $P$ will calculate the <strong>extension</strong> of $T$ to obtain a polynomial $h: \mathbb{F}^{\log S} \to \mathbb{F}$. This extension $h$ is the first message sent to the verifier $$\forall x \in \lbrace 0, 1 \rbrace^{\log S}: h(x) = T(x)$$</p>
+</li>
+<li>
+<p>The verifier $V$ needs to verify that this is indeed true, but it will only make a few evaluations of $h$ in doing so</p>
+</li>
+</ul>
+<p>The intuition behind using extensions is that: If there is even just a singe tiny error in the transcript, so by Schwartz-Zippel theorem,the extension of this transcript will disagree on almost all points with respect to the correct transcript.</p>
+<p><strong>Step 1:</strong></p>
+<p>Given $(\log S)$-variate polynomial $h$, identify a related $(3 \log S)$-variate polynomial $g_h$ such that: $h$ extends a correct transcript if and only if $g_h(a, b, c) = 0 \forall (a, b, c) \in {0,1}^{3 \log S}$ and to evaluate $g_h(r)$ at any $r$, suffices to evaluate $h$ at only 3 inputs</p>
+<p>So, we will define $g_h(a, b, c)$ via: $$\tilde{add}(a, b, c)(h(a) - (h(b) + h(c))) + \tilde{mult}(a, b, c) (h(a) - h(b)h(c))$$</p>
+<p>Let&rsquo;s just quickly introduce what the functions $\tilde{add}$ and $\tilde{mult}$ are:</p>
+<ul>
+<li>
+<p>$\tilde{add}(a, b, c)$ is a multilinear extension of a <i>wiring predicate</i> of a circuit, which return 1 if and only if $a$ is an <strong>addition</strong> gate and it&rsquo;s two inputs are gates $b$ and $c$</p>
+</li>
+<li>
+<p>$\tilde{mult}(a, b, c)$ is a multilinear extension of a <i>wiring predicate</i> of a circuit, which returns 1 if and only if $a$ is a <strong>multiplication</strong> gate and it&rsquo;s two inputs are gates $b$ and $c$</p>
+</li>
+</ul>
+<p>With the definition, we can see what happens:</p>
+<ul>
+<li>
+<p>$g_h(a, b, c) = h(a) - (h(b) + h(c))$ if $a$ is the label of a gate that computes the <strong>sum</strong> of gates $b$ and $c$</p>
+</li>
+<li>
+<p>$g_h(a, b, c) = h(a) - h(b)h(c)$ if $a$ is the label of a gate that computes the product of gates $b$ and $c$</p>
+</li>
+<li>
+<p>$g_h(a, b, c) = 0$ otherwise</p>
+</li>
+</ul>
+<p><strong>Step 2:</strong></p>
+<p>How can the verifier check that indeed $\forall (a, b, c) \in {0,1}^{3 \log S}: g_h(a, b, c) = 0$ ? In doing so, verifier should only evaluate $g_h$ at a single point!</p>
+<p>We will use a well-known result in polynomials: $\forall x \in H: g_h(x) = 0 \iff Z_h(x) | Z_H(x)$, where $Z_H(x)$ is called the <strong>vanishing polynomial</strong> for $H$ and is defined as: $$Z_H(x) = \prod_{a\in H}(x - a)$$</p>
+<p>Then, the polynomial IOP will work as follows:</p>
+<ul>
+<li>
+<p>$P$ sends a polynomial $q$ such that $g_h(X) = q(X) \times Z_H(X)$</p>
+</li>
+<li>
+<p>$V$ verifies this by picking a random $r \in H$ and checking $g_h(r) = q(r) \times Z_H(r)$</p>
+</li>
+</ul>
+<p>In realworld, this approach is not really the best approach because of it&rsquo;s problems</p>
+<ul>
+<li>
+<p>$g_h$ is not univariate, it has $3 \log S$ variables</p>
+</li>
+<li>
+<p>Having $P$ find and send the quotient polynomial is expensive</p>
+</li>
+<li>
+<p>In the final SNARK, this would mean applying polynomial commitment to addition polynomials.</p>
+</li>
+</ul>
+<p>Although it has some problems, but this approach is actually used by well-known schemes: <strong>Marlin</strong>, <strong>PlonK</strong> and <strong>Groth16</strong> do</p>
+<p>To deal with that problems, we can use the sum-check protocol: It handles multivariate polynomials, and doesn&rsquo;t require $P$ to send additional large polynomials</p>
+<p>Here is the general idea (We are working over the integers instead of $\mathbb{F}$):</p>
+<ul>
+<li>
+<p>$V$ checks this by running sum-check protocol with $P$ to compute: $$\sum_{a, b, c \in \lbrace 0, 1 \rbrace^{\log S}}g_h(a, b, c)^2$$</p>
+</li>
+<li>
+<p>If all terms in the sum are 0, the sum is 0</p>
+</li>
+<li>
+<p>If working over the integers, any non-zero term in the sum will cause the sum to be strictly positive</p>
+</li>
+<li>
+<p>At end of sum-check protocol, $V$ needs to evaluate $g_h(r_1, r_2, r_3)$</p>
+<ul>
+<li>
+<p>Suffices to evaluate $h(r_1), h(r_2), h(r_3)$, because $V$ will only compute $g_h(r_1, r_2, r_3)$ for some random inputs.</p>
+</li>
+<li>
+<p>Outside of these evaluations, $V$ runs in time $\mathcal{O}(\log S)$</p>
+</li>
+<li>
+<p>$P$ performs $\mathcal{O}(S)$ field operations given a witness $\omega$</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>To understand more about the polynomial IOP, I suggest reading Justin Thaler&rsquo;s online book, chapters 3 and 4, which is noticed at the resources section.</p>
+
+    
+  </article>
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  
+
+<div id="sharingbuttons">
+    
+    
+    <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Zero%20Knowledge%20Proof%3a%20Interactive%20Proofs&amp;url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="mailto:?subject=Zero%20Knowledge%20Proof%3a%20Interactive%20Proofs&amp;body=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f" target="_self" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM7.25 14.43l-3.5 2c-.08.05-.17.07-.25.07-.17 0-.34-.1-.43-.25-.14-.24-.06-.55.18-.68l3.5-2c.24-.14.55-.06.68.18.14.24.06.55-.18.68zm4.75.07c-.1 0-.2-.03-.27-.08l-8.5-5.5c-.23-.15-.3-.46-.15-.7.15-.22.46-.3.7-.14L12 13.4l8.23-5.32c.23-.15.54-.08.7.15.14.23.07.54-.16.7l-8.5 5.5c-.08.04-.17.07-.27.07zm8.93 1.75c-.1.16-.26.25-.43.25-.08 0-.17-.02-.25-.07l-3.5-2c-.24-.13-.32-.44-.18-.68s.44-.32.68-.18l3.5 2c.24.13.32.44.18.68z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f&amp;resubmit=true&amp;title=Zero%20Knowledge%20Proof%3a%20Interactive%20Proofs" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 11.5c0-1.65-1.35-3-3-3-.96 0-1.86.48-2.42 1.24-1.64-1-3.75-1.64-6.07-1.72.08-1.1.4-3.05 1.52-3.7.72-.4 1.73-.24 3 .5C17.2 6.3 18.46 7.5 20 7.5c1.65 0 3-1.35 3-3s-1.35-3-3-3c-1.38 0-2.54.94-2.88 2.22-1.43-.72-2.64-.8-3.6-.25-1.64.94-1.95 3.47-2 4.55-2.33.08-4.45.7-6.1 1.72C4.86 8.98 3.96 8.5 3 8.5c-1.65 0-3 1.35-3 3 0 1.32.84 2.44 2.05 2.84-.03.22-.05.44-.05.66 0 3.86 4.5 7 10 7s10-3.14 10-7c0-.22-.02-.44-.05-.66 1.2-.4 2.05-1.54 2.05-2.84zM2.3 13.37C1.5 13.07 1 12.35 1 11.5c0-1.1.9-2 2-2 .64 0 1.22.32 1.6.82-1.1.85-1.92 1.9-2.3 3.05zm3.7.13c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9.8 4.8c-1.08.63-2.42.96-3.8.96-1.4 0-2.74-.34-3.8-.95-.24-.13-.32-.44-.2-.68.15-.24.46-.32.7-.18 1.83 1.06 4.76 1.06 6.6 0 .23-.13.53-.05.67.2.14.23.06.54-.18.67zm.2-2.8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm5.7-2.13c-.38-1.16-1.2-2.2-2.3-3.05.38-.5.97-.82 1.6-.82 1.1 0 2 .9 2 2 0 .84-.53 1.57-1.3 1.87z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="whatsapp://send?text=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.1 3.9C17.9 1.7 15 .5 12 .5 5.8.5.7 5.6.7 11.9c0 2 .5 3.9 1.5 5.6L.6 23.4l6-1.6c1.6.9 3.5 1.3 5.4 1.3 6.3 0 11.4-5.1 11.4-11.4-.1-2.8-1.2-5.7-3.3-7.8zM12 21.4c-1.7 0-3.3-.5-4.8-1.3l-.4-.2-3.5 1 1-3.4L4 17c-1-1.5-1.4-3.2-1.4-5.1 0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.7 2.8 1.8 1.8 2.8 4.2 2.8 6.7-.1 5.2-4.3 9.4-9.5 9.4zm5.1-7.1c-.3-.1-1.7-.9-1.9-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.4c-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6s.3-.3.4-.5c.2-.1.3-.3.4-.5.1-.2 0-.4 0-.5C10 9 9.3 7.6 9 7c-.1-.4-.4-.3-.5-.3h-.6s-.4.1-.7.3c-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.3-.3-.4-.6-.5z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f&amp;t=Zero%20Knowledge%20Proof%3a%20Interactive%20Proofs" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path fill-rule="evenodd" d="M60.94 82.314L17 0h20.08l25.85 52.093c.397.927.86 1.888 1.39 2.883.53.994.995 2.02 1.393 3.08.265.4.463.764.596 1.095.13.334.262.63.395.898.662 1.325 1.26 2.618 1.79 3.877.53 1.26.993 2.42 1.39 3.48 1.06-2.254 2.22-4.673 3.48-7.258 1.26-2.585 2.552-5.27 3.877-8.052L103.49 0h18.69L77.84 83.308v53.087h-16.9v-54.08z"></path></svg>
+        </div>
+      </div>
+    </a>
+    
+
+    
+    
+    <a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Zero%20Knowledge%20Proof%3a%20Interactive%20Proofs&amp;url=https%3a%2f%2fmichaelneuper.github.io%2fposts%2fzkp3%2f" target="_blank" rel="noopener" aria-label="">
+      <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.707 8.475C.275 8.64 0 9.508 0 9.508s.284.867.718 1.03l5.09 1.897 1.986 6.38a1.102 1.102 0 0 0 1.75.527l2.96-2.41a.405.405 0 0 1 .494-.013l5.34 3.87a1.1 1.1 0 0 0 1.046.135 1.1 1.1 0 0 0 .682-.803l3.91-18.795A1.102 1.102 0 0 0 22.5.075L.706 8.475z"/></svg>
+        </div>
+      </div>
+    </a>
+    
+</div>
+  <div class="paginator">
+    
+    <a class="link" href="https://michaelneuper.github.io/posts/bi0s/" title="bi0sCTF 2024">← prev</a>
+    
+    
+    <a class="link" href="https://michaelneuper.github.io/posts/kalmar2024/" title="KalmarCTF 2024">next →</a>
+    
+  </div>
+  <div class="comment">
+    
+    
+    
+    <script src="https://giscus.app/client.js"
+    data-repo="michaelneuper/hugo-texify3"
+    data-repo-id="R_kgDOIjPNaQ"
+    data-category="General"
+    data-category-id="DIC_kwDOIjPNac4CaklA"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme=""
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+</script>
+
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div>
+    <span>Powered by  <a class=link href=https://gohugo.io target=_blank rel=noopener>Hugo</a> | 
+Theme <a class=link href=https://github.com/michaelneuper/hugo-texify3 target=_blank rel=noopener>TeXify3</a>
+</span>
+  </div>
+  <div>
+    <span>Copyright © 2025 Michael Neuper</span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='https://michaelneuper.github.io/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

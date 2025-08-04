@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://michaelneuper.github.io/sitemap.xml
