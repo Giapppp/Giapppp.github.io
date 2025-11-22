@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Zero Knowledge Proof: Interactive Proofs"
 date: "2024-03-07"
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 In this post, we will dig deeper about Interactive Proofs, which was described in [my previous post](https://giapppp.github.io/posts/zkp1/). 

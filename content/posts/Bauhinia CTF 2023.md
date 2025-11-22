@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Bauhinia CTF 2023"
 date: "2023-08-22"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["RSA", "Coppersmith", "Lattice", "Discrete Log"]
 ---
 Tuần vừa rồi, mình có chơi giải Bauhinia CTF với team @phis1Ng_. Mình thấy các challenge Crypto được đánh giá cao, với lại nhạc cũng hay nữa :))), mình có làm được một ~~vài~~ challenge về Crypto nên muốn chia sẻ với mọi người
 

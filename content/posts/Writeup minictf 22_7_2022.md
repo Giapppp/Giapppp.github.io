@@ -2,9 +2,8 @@
 author: "Giap"
 title: "MiniCTF 22/7"
 date: "2023-07-22"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["AES", "RSA"]
 ---
 Mình xin trình bày một số bài mà mình làm được trong minictf tối 22/7 vừa qua
 

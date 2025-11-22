@@ -2,9 +2,8 @@
 title: "Zero Knowledge Proof: FRI-based Polynomial Commitments and Fiat-Shamir"
 date: 2025-03-25
 description:
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 From older posts, we have seen various types of polynomial commitment scheme (PCS) and interactive oracle proof (IOP), which are important ingredients for building SNARK for general circuits. Today, we will talk about FRI - another polynomial commitment scheme based on Reed-Solomon code, and revisiting Fiat-Shamir Transformation.

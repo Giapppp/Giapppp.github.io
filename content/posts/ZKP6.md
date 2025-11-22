@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Zero Knowledge Proof: Polynomial Commitments based on Error-correcting Codes"
 date: "2024-08-17"
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 In this post, we will talk about other polynomial commitment scheme based on Error-correcting codes.

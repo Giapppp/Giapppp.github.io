@@ -2,9 +2,8 @@
 author: "Giap"
 title: "HTB Cyber Apocalypse CTF 2023: The Cursed Mission"
 date: "2023-03-25"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["AES", "Frequency Analysis"]
 ---
 Đây là challenge mình cảm thấy thú vị nhất trong những challenge mình giải được trong giải này (mấy bài khó hơn thì mình giải không được :D), vì thế mình muốn viết writeup chi tiết cho bài này, vì vốn Tiếng Anh hạn hẹp mà mình lại nhiều lời nên mình sẽ viết Tiếng Việt vậy :D 
 

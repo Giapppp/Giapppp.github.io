@@ -2,9 +2,8 @@
 author: "Giap"
 title: "KalmarCTF 2024"
 date: "2024-03-17"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["Pedersen Commitment", "Discrete Log", "PRNG"]
 ---
 
 Last weekend, I played KalmarCTF 2024 with my team @1337%Yogurt. The cryptography category is very hard this year, so I could only manage to solve some of them. Here is my writeup for challenges that are solved by me.

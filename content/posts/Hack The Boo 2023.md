@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Hack The Boo 2023"
 date: "2023-10-30"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["AES", "RSA", "Coppersmith"]
 ---
 # Hack The Boo 2023 
 

@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Zero Knowledge Proof: An Introduction"
 date: "2024-02-10"
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 At the first time I have heard about Zero Knowledge Proof, I felt like it's totally different about all cryptography knowledge that i learned, so I decided to learn it! In this post, I will try to explain what Zero Knowledge Proof is, with some examples.

@@ -2,9 +2,8 @@
 author: "Giap"
 title: "SEETF 2023"
 date: "2023-06-13"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["RC4", "RSA", "Discrete Log", "Coppersmith"]
 ---
 Lời giải của mình cho một số bài Cryptography trong giải SEETF 2023
 

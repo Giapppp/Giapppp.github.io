@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Zero Knowledge Proof: SNARK"
 date: "2024-02-20"
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 In this post, I will try to describe my knowledge about SNARK. By the time I'm writing this post, [ZK Hack Discord](https://zkhack.dev/) is running ZK Whiteboard Study Group and they are discussing about SNARK, so maybe I'm lucky :D 

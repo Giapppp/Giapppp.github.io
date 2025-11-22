@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discrete Log Problem"
 date: "2024-05-15"
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants. 

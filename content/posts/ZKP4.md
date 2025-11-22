@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Zero Knowledge Proof: The PLONK SNARK"
 date: "2024-04-25"
-tags: [
-    "Learning", "ZKP"
-]
+categories: ["Learning"]
+tags: ["ZKP"]
 ---
 
 In this posts, we will construct a widely used SNARK called PLONK

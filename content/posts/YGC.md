@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Yao's Garbled Circuit"
 date: "2024-08-17"
-tags: [
-    "Learning"
-]
+categories: ["Learning"]
+tags: ["MPC", "Garbled Circuit"]
 ---
 
 ## Introduction

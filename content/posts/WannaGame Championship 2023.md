@@ -2,9 +2,8 @@
 author: "Giap"
 title: "WannaGame Championship 2023"
 date: "2023-12-03"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["Lattice", "ECC"]
 ---
 # WannaGame Championship 2023
 

@@ -2,9 +2,8 @@
 author: "Giap"
 title: "TJCTF 2023 - Keysmith"
 date: "2023-05-28"
-tags: [
-    "CTF-Writeup",
-]
+categories: ["Writeup"]
+tags: ["RSA", "Discrete Log"]
 ---
 **TL; DR:** We can generate smooth-prime p and choose q = 3; and then solve the d-log problem to find e:
 $$ msg^e = s \ (mod\ p * q) $$

@@ -2,9 +2,8 @@
 author: "Giap"
 title: "Whitebox Cryptography - Short Introduction"
 date: "2025-07-17"
-tags: [
-    "Learning"
-]
+categories: ["Learning"]
+tags: ["Whitebox"]
 ---
 
 ## Introduction
