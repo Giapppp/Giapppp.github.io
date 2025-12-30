@@ -1,6 +1,6 @@
 ---
 title: "2025 Retrospecitve"
-date: 2025-12-29T23:59:59+07:00
+date: 2025-12-31T23:59:59+07:00
 description: Look back for one of the greatest year I have ever had. 
 categories: ["Life"]
 tags: []
@@ -30,33 +30,13 @@ I had two big trips in this year! Its the main reason to make my 2025 so perfect
 
 The first one is the trip to Korea for Hacktheon Sejong Final with @1337%Yogurt, and I was really excited because it's the first time I gone to another country and attended in final competition. Although the visa step took nearly one months, its worth for good memories I had. The competition was held really nice with excellent preparation, and I was destroyed with great set of challenges. 
 
-<p align="center">
-  <img src="https://github.com/Giapppp/Giapppp.github.io/blob/f98a45063e5a05bab2673b92dbc4c471f182af30/static/images/recap2025/1337yogurt.png?raw=true" />
-</p>
-<p style="text-align: center;"><sub>1337%Yogurt is here!</sub></p>
-
 After competition, because I don't know any place in Sejong except place that my team competed, my friends suggest going to Seoul and turn out its good option. I went to Myeongdong night market and shocked with density of visitors here, and the food is really good. I also visited LoL Park and Korea University and had a lunch with @is0m0rph1sm and @ksprsk, which is the best moment I had in that trip.
-
-<p align="center">
-  <img src="https://github.com/Giapppp/Giapppp.github.io/blob/f98a45063e5a05bab2673b92dbc4c471f182af30/static/images/recap2025/KU.png?raw=true" />
-</p>
-<p style="text-align: center;"><sub>Korea University - It's really big university</sub></p>
 
 ### Hanoi
 
 The second one is the trip to Hanoi to attend [Young Cryptographer Forum](https://viasm.edu.vn/hdkh/YCF2025) and [AsiaCCS'25](https://asiaccs2025.hust.edu.vn/). This is a great oppotunity for me to see what a real world cryptographer does, besides learning cryptography via CTF. With lots of new topic from many lecturers, my small brain was exploded, but also really impressive with their works, and wish one day I could be as good as them. At these events i was sticked with BKISC and Blackpinker - which are other university's CTF teams in HCMC. We discussed about all topics in both events and travelled together, and I was very appreciatived for what they did with me. 
 
-<p align="center">
-  <img src="https://github.com/Giapppp/Giapppp.github.io/blob/f98a45063e5a05bab2673b92dbc4c471f182af30/static/images/recap2025/asiaccs.png?raw=true" />
-</p>
-<p style="text-align: center;"><sub>Me at AsiaCCS'2025!</sub></p>
-
 Because the events is really near with Vietnam National Day, so I decided to stay at Hanoi 1-2 day more to travel. The streets and tourist attractions is decorated beautifully with flags and lamps, and I could see lots of national visitors everywhere. I could feel the bustling atmosphere of the city at that time. I also have a fun time with my friends who are live in Hanoi, one of them spent many time to make a really detailed plan for me to visit many well-known places, so my phone is full of pictures haha. I'm really lucky to know and meet them. 
-
-<p align="center">
-  <img src="https://github.com/Giapppp/Giapppp.github.io/blob/f98a45063e5a05bab2673b92dbc4c471f182af30/static/images/recap2025/street.png?raw=true" />
-</p>
-<p style="text-align: center;"><sub>A random street in Hanoi.</sub></p>
 
 ## Life
 
