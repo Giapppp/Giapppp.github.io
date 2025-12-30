@@ -20,11 +20,6 @@ As a CTF player, my favorite challenges this year are `These Walls` in [Codegate
 
 As an author of CTF competitions, I wrote 10 challenges for [idekCTF 2025](https://ctftime.org/event/2746) (I also wrote a detail writeup at [here](https://giapppp.github.io/posts/idekctf-2025/)) and [WannaGame Championship 2025](https://ctftime.org/event/2898). My favorite challenges are `Sadness ECC` because I took the idea from a problem in a Vietnam mathematical contest and found it's really cool; `Interesting Signing` because it's the first time I wrote a challenge in C and luckily there's no unintended pwn bug. 
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/recap2025/olympiad.jpg" />
-</p>
-<p style="text-align: right;"><sub>Problem 2 is where I took the idea for Sadness ECC challenge, no idea for other problems.</sub></p>
-
 CTF competitions was really fun in first half of this year, but from second half, LLMs became smarter and can solve lots of Cryptography challenges. I attended lots of competitions that crypto category is full cleared in ~1 hours, it makes me really sad and feel like CTF is not fun anymore...
 
 ## Trip
