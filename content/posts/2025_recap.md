@@ -1,6 +1,6 @@
 ---
 title: "2025 Retrospecitve"
-date: 2025-12-31T23:59:59+07:00
+date: 2025-12-31
 description: Look back for one of the greatest year I have ever had. 
 categories: ["Life"]
 tags: []
