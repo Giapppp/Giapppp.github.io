@@ -3,7 +3,7 @@ title: "2025 Retrospecitve"
 date: 2025-12-31
 description: Look back for one of the greatest year I have ever had. 
 categories: ["Life"]
-tags: []
+tags: ["Life"]
 ---
 
 Time passes quickly, and we reach the end of 2025. This year is a memorable year with me because lots of things happened, so I want to save good memories here. 

@@ -477,7 +477,7 @@ print(open('flag.txt', 'r').read())
 
 In this challenge, we are asked to calculate nth element of the sequence:
 
-$$\begin{aligned} a _ n = b * a _ {n - 1} + c * a _ {n - 2} \mod p \end{aligned}$$
+$$\begin{aligned} a_n = b \cdot a_{n-1} + c \cdot a_{n-2} \mod p \end{aligned}$$
 
 I will explain how to find general term of $(a_n)$. First, we need to solve the quadratic equation (it is called __characteristic equation__):
 
@@ -487,13 +487,13 @@ Our delta will be $\Delta = \sqrt{b^2 + 4c}$, and because we are working in $\ma
 
 __Case 1:__ $\Delta$ is a quadratic residue modulo $p$
 
-If $\Delta$ is a quadratic residue modulo $p$, so we can calculate two roots of (1) like normal. Suppose that our roots are $x_1$ and $x_2$, so the general term of our sequence will be $$a_n = u * x _ 1 ^ n + v * x _ 2 ^ n$$
+If $\Delta$ is a quadratic residue modulo $p$, so we can calculate two roots of (1) like normal. Suppose that our roots are $x_1$ and $x_2$, so the general term of our sequence will be $$a_n = u \cdot x_1^n + v \cdot x_2^n$$
 
 Because server gives us $a_0$ and $a_1$, so we can calculate $u$ and $v$ easily, which are `const_phi` and `const_psi`
 
 __Case 2:__ $\Delta$ is a nonquadratic residue modulo $p$
 
-Now, we can't work over $\mathbb{F} _ p$ because $\sqrt{\Delta}$ doesn't exist, so we need to work over $\mathbb{F} _ {p^2}$, and it is equivalent to $\mathbb{F} _ p[x]/(x^2 - \Delta)$. After extend the field, we can do the same as Case 1
+Now, we can't work over $\mathbb{F}_p$ because $\sqrt{\Delta}$ doesn't exist, so we need to work over $\mathbb{F}_{p^2}$, and it is equivalent to $\mathbb{F}_p[x]/(x^2 - \Delta)$. After extend the field, we can do the same as Case 1
 
 Because server requires polynomial modulo in all cases, so for case 1, I bruteforce to find a number which is a quadratic nonresidue modulo $p$.
 

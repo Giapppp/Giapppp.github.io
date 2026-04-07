@@ -44,7 +44,7 @@ Lets take a look at this line:
 output.append(sum([a + unknowns[b]^2 * unknowns[c]^3 for a, b, c in zip(aa, bb, cc)]) % p)
 ```
 
-We can get lots of equations contain only $unknowns_i^2 * unknowns_j^3$ by subtract $a$ from this. Then we will treat $unknowns_i^2 * unknowns_j^3$ as a variable and solve systems of linear equations. After that, we can find $unknown_i$ from $unknowns_i^2 * unknowns_i^3$ by calculate 5th-roots. When we have $unknowns_i$, we can find flag !
+We can get lots of equations contain only $unknowns\_i^2 \cdot unknowns\_j^3$ by subtract $a$ from this. Then we will treat $unknowns\_i^2 \cdot unknowns\_j^3$ as a variable and solve systems of linear equations. After that, we can find $unknown\_i$ from $unknowns\_i^2 \cdot unknowns\_i^3$ by calculate 5th-roots. When we have $unknowns\_i$, we can find flag !
 
 ```py
 from Crypto.Util.number import *
@@ -163,7 +163,7 @@ for i, k in enumerate(ks):
 After recovered all coefficients, now we can construct two polynomials:
 
 $$
-f(x) = (\sum_{i=0}^{19}coeff_i * x^i)^{127} - c_1 \mod n \newline
+f(x) = (\sum_{i=0}^{19}coeff\_i \cdot x^i)^{127} - c_1 \mod n \newline
 g(x) = x^{65537} - c_2 \mod n
 $$
 

@@ -258,7 +258,7 @@ A challenge with weird encryption and signing method! In this challenge, the sou
 
 ### From an equation to an elliptic curve :astonished:  
 
-In this challenge, the $public\\_key = (a_1, b_1, c_1)$ and $private\\_key = (a_2, b_2, c_2)$ have a relationship
+In this challenge, the `public_key` $= (a_1, b_1, c_1)$ and `private_key` $= (a_2, b_2, c_2)$ have a relationship
 
 $$f = magic(a_1, b_1, c_1) = magic(a_2, b_2, c_2) = {fn \over fd}$$
 
@@ -267,7 +267,7 @@ With a strange equation, I try to google to have some ways to deal with it, afte
 
 It looks like a magic !
 
-We will using the $public\\_key$ and the result in the site. Let:
+We will using the `public_key` and the result in the site. Let:
 
 $$\begin{aligned}u &= 3*{f^2z - 12x \over z} \newline v &= 108*{2xy-fxz+z^2 \over z^2}\end{aligned}$$
 
@@ -277,7 +277,7 @@ With this way, we can generate many tuples $(a_i, b_i, c_i)$ that satisfy $magic
 
 ### Finding private key
 
-With the relationship we have found, we will treat $privatekey$ as a point $G_{priv}$ in $(E_f)$. Because this challenge has a hidden function `derive_public_key()`, so I guess $G_{priv}$ generates the $public\\_key$ as a point $G\_{pub}$ by some method
+With the relationship we have found, we will treat `private_key` as a point $G_{priv}$ in $(E_f)$. Because this challenge has a hidden function `derive_public_key()`, so I guess $G_{priv}$ generates the `public_key` as a point $G_{pub}$ by some method
 
 If we read the code carefully, we will see that $0 < a_2, b_2, c_2 < 2^{1024}$, when $a_1, b_1, c_1 \approx 2^{8192}$, so we need to find a way to decrease the point $G_{pub}$. And surprisingly, SageMath has a magical method `.division_point()`. When we use that method to calculate $\frac{1}{2}G_{pub}$, we will have the point $G_{priv}!$
 
@@ -285,7 +285,7 @@ If we read the code carefully, we will see that $0 < a_2, b_2, c_2 < 2^{1024}$, 
 
 ### Finding the signature
 
-When we have $private\_key$, we can find the signature
+When we have `private_key`, we can find the signature
 
 Reading the source code, we have
 
@@ -293,14 +293,14 @@ $$\begin{aligned}mix_0 &= key.encrypt(sig_0 + sig_1) \newline mix_1 &= key.encry
 
 where $$\begin{aligned}sig_0 &= \Big({flag \over sha256(flag)} + {sha256(flag) \over c} + {c \over flag}\Big)^d \newline sig_1 &= c^d\end{aligned}$$
 
-and $d$ can calculate from $private\_key$
+and $d$ can calculate from `private_key`
 
 (Remember $sig_0$ and $sig_1$ are in $GF(fd)$)
-Because we have $private\_key$, we can decrypt $mix_0$ and $mix_1$ and get $sig_0$ and $sig_1$
+Because we have `private_key`, we can decrypt $mix_0$ and $mix_1$ and get $sig_0$ and $sig_1$
 
 ### Finding the flag
 
-Because we can calculate $e$ from $public\_key$, so by encrypt $sig_0$ and $sig_1$, we will have the equation
+Because we can calculate $e$ from `public_key`, so by encrypt $sig_0$ and $sig_1$, we will have the equation
 
 $$\begin{aligned}k = sig_0^e = {flag \over sha256(flag)} + {sha256(flag) \over c} + {c \over flag} \mod fd\end{aligned}$$
 

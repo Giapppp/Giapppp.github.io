@@ -1,0 +1,15 @@
+# Hugo build output
+public/
+resources/
+.hugo_build.lock
+
+# Dependencies
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

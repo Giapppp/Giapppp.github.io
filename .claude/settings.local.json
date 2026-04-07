@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n '\\\\$.*_.*\\\\$' content/posts/*.md)",
+      "Bash(grep -v '\\\\\\\\\\\\\\\\')"
+    ]
+  }
+}
