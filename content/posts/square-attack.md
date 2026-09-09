@@ -7,11 +7,6 @@ tags: ["Cryptography", "AES"]
 language: "Vietnamese"
 ---
 
-Square Attack on reduced-round AES, with examples for four and five rounds.
-<!--more-->
-
-# Week 1: Square Attack
-
 Square Attack là một kĩ thuật tấn công đối với Block Cipher khi khai thác vào các tính chất không đổi của các round encryption trong cipher đó. Kĩ thuật này được phát hiện lần đầu tiên đối với [Square Cipher](http://cse.iitkgp.ac.in/~debdeep/courses_iitkgp/Crypto/papers/square.pdf). Trong bài viết này, mình sẽ tập trung vào việc khai thác AES 4 round và giải một số bài liên quan đến kĩ thuật này. Ngoài ra, ta cũng sẽ thảo luận về áp dụng Square Attack cho 5 round AES
 
 ## Tài liệu

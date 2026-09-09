@@ -7,11 +7,6 @@ tags: ["Blockchain", "Solidity"]
 language: "Vietnamese"
 ---
 
-Blockchain security notes and Ethernaut challenge writeups.
-<!--more-->
-
-# Blockchain Thingies
-
 ## Ethernaut
 
 ### Reentrancy
