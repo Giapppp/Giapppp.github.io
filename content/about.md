@@ -5,7 +5,7 @@ layout: "single"
 
 # About me
 
-Hi, I'm Giap from Vietnam and I'm 22 year old. I usually play CTF with [r3kapig](https://ctftime.org/team/58979) and [Infobahn](https://ctftime.org/team/364723).
+Hi, I'm Giap from Vietnam and I'm 22 year old.
 
 ## Education
 
@@ -18,4 +18,4 @@ Hi, I'm Giap from Vietnam and I'm 22 year old. I usually play CTF with [r3kapig]
 
 ## Experience
 
-- [Verichains](https://verichains.io/) Security Intern (04.2024 ~ )
+- [Verichains](https://verichains.io/) Security Intern (04.2024 ~ 06.2026)
