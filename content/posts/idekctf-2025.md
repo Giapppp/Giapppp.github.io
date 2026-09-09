@@ -5,6 +5,7 @@ date: 2025-08-03
 description: My writeup for all challenges I created for idekctf 2025, and some lessons i learned.
 categories: ["Writeup"]
 tags: ["Lattice", "RSA", "Coppersmith", "ECC"]
+language: "English"
 ---
 
 idekCTF 2025 is one of the most memorable events for me — not only because I was the author of many challenges in this prestigious CTF, but also because of the bunch of dumb mistakes I made. Therefore, it’s worth having its own post. A huge thanks to all the idek team members for organizing and hosting it, especially @es3n1n for all the effort he put into making this CTF — truly a king!

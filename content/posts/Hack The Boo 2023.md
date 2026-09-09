@@ -4,6 +4,7 @@ title: "Hack The Boo 2023"
 date: "2023-10-30"
 categories: ["Writeup"]
 tags: ["AES", "RSA", "Coppersmith"]
+language: "English"
 ---
 # Hack The Boo 2023 
 

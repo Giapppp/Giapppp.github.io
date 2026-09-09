@@ -4,6 +4,7 @@ title: "Whitebox Cryptography - Short Introduction"
 date: "2025-07-17"
 categories: ["Learning"]
 tags: ["Whitebox"]
+language: "English"
 ---
 
 ## Introduction

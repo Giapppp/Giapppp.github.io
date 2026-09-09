@@ -4,6 +4,7 @@ title: "MiniCTF 22/7"
 date: "2023-07-22"
 categories: ["Writeup"]
 tags: ["AES", "RSA"]
+language: "Vietnamese"
 ---
 Mình xin trình bày một số bài mà mình làm được trong minictf tối 22/7 vừa qua
 

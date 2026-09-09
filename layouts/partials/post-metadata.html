@@ -1,0 +1,6 @@
+<span class="post-metadata">
+  <time datetime="{{ .PublishDate.Format "2006-01-02" }}">{{ .PublishDate.Format .Site.Params.dateFormat }}</time>
+  {{ with .Params.language }}
+  <span class="post-language">· {{ . }}</span>
+  {{ end }}
+</span>

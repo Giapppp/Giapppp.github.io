@@ -4,6 +4,7 @@ title: "HTB University CTF 2023: Brains and Bytes"
 date: "2023-12-11"
 categories: ["Writeup"]
 tags: ["RSA", "Coppersmith", "ECC"]
+language: "English"
 ---
 
 I played HTB University CTF 2023 with my university team @Wanna.W1n and my team solved all crypto challenges. Here is my writeup for two challenges I solved: __Mayday Mayday__ and __Zombie Rolled__

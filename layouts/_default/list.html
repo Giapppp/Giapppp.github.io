@@ -32,7 +32,7 @@
       {{ range .Pages }}
       <li>
         <a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a>
-        <time>{{ .PublishDate.Format .Site.Params.dateFormat }}</time>
+        {{ partial "post-metadata.html" . }}
       </li>
       {{ end }}
     </ul>

@@ -4,6 +4,7 @@ date: 2026-09-08
 description: My writeup for the vulnerability I found in Spark protocol, which is used by Firo
 categories: ["Writeup"]
 tags: ["ZKP"]
+language: "English"
 ---
 
 Recently, I independently found and reported a cryptographic bug in Spark, the private transaction protocol used by Firo. With one owned coin, we can construct a spend that counts the coin twice, creates new private coins, and leaves the original coin spendable. Here is my writeup for the bug and how it affects a Spark transaction.

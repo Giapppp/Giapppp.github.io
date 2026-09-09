@@ -57,7 +57,7 @@
         font-size: 1.05rem;
       }
 
-      time {
+      .post-metadata {
         font-size: 0.85rem;
         color: var(--fg4);
         white-space: nowrap;
@@ -67,7 +67,7 @@
       @media screen and (max-width: $mobile-breakpoint) {
         flex-direction: column;
 
-        time {
+        .post-metadata {
           margin-left: 0;
           margin-top: 0.2rem;
         }

@@ -4,6 +4,7 @@ title: "Zero Knowledge Proof: Polynomial Commitments based on Pairing and Discre
 date: "2024-05-15"
 categories: ["Learning"]
 tags: ["ZKP"]
+language: "English"
 ---
 
 In this post, we will learn deeply about polynomial commitment schemes based on Pairing and Discrete Logarithm Problem, mainly KZG, Bulletproofs and their variants. 
@@ -113,7 +114,7 @@ Remember two properties of KZG ? They are:
 
 We can see proof of soundness in the lecture:
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp5/zkp5_1.png)
+![Image alt](/images/zkp5/zkp5_1.png)
 
 #### Knowledge of Exponent (KoE)
 
@@ -213,7 +214,7 @@ __$verify(gp, comm_f, u, v, \pi)$__:
 Note that we do $eval$ and $verify$ recursively around $\log d$ times.
 The idea of Bulletproofs is to recursively divide a polynomial in two polynomials, and commit to those smaller polynomials.
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp5/zkp5_2.png)
+![Image alt](/images/zkp5/zkp5_2.png)
 
 #### Properties of Bulletproofs
 
@@ -247,4 +248,4 @@ The idea of Bulletproofs is to recursively divide a polynomial in two polynomial
 
 ### Summary
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp5/zkp5_3.png)
+![Image alt](/images/zkp5/zkp5_3.png)

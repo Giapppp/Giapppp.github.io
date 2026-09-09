@@ -4,6 +4,7 @@ title: "CryptoCTF 2023"
 date: "2023-07-10"
 categories: ["Writeup"]
 tags: ["RSA", "ECC"]
+language: "Vietnamese"
 ---
 Tuần vừa rồi, mình có chơi giải CryptoCTF 2023 với team @Wanna.W1n. Đúng như cái tên, giải này toàn Crypto không à :)). Sau đây là lời giải của một vài bài mà mình ~~osint~~ làm được.
 

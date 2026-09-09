@@ -4,6 +4,7 @@ title: "WannaGame Championship 2023"
 date: "2023-12-03"
 categories: ["Writeup"]
 tags: ["Lattice", "ECC"]
+language: "English"
 ---
 # WannaGame Championship 2023
 
@@ -232,6 +233,6 @@ print(long_to_bytes(flag))
 
 **P/s.** This challenge took me nearly 12 hours to solve :((
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/wgc2023/wgc2023_1.png)
+![Image alt](/images/wgc2023/wgc2023_1.png)
 
 And it isn't a game.

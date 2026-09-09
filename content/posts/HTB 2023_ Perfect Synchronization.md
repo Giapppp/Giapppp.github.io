@@ -4,6 +4,7 @@ title: "HTB Cyber Apocalypse CTF 2023: The Cursed Mission"
 date: "2023-03-25"
 categories: ["Writeup"]
 tags: ["AES", "Frequency Analysis"]
+language: "Vietnamese"
 ---
 Đây là challenge mình cảm thấy thú vị nhất trong những challenge mình giải được trong giải này (mấy bài khó hơn thì mình giải không được :D), vì thế mình muốn viết writeup chi tiết cho bài này, vì vốn Tiếng Anh hạn hẹp mà mình lại nhiều lời nên mình sẽ viết Tiếng Việt vậy :D 
 
@@ -57,11 +58,11 @@ Các bạn có thể suy ra một vài điều khi đọc file trên như sau:
 ## 2. ECB (Electronic Codebook)
 Đây là chế độ mã hóa đơn giản nhất trong AES. Trong chế độ này, message sẽ được chia thành các khối bit có **độ dài bằng nhau**. Với mỗi khối dữ liệu, ta sẽ mã hóa **từng khối** với khóa cho trước để có được khối mã hóa tương ứng. 
 
-![ECB](https://github.com/Giapppp/CTF/blob/main/HTB/HTB%202023/Perfect%20Synchronization/picture/Screenshot%202023-03-23%20231210.png?raw=true)
+![ECB](/images/perfect-synchronization/perfect-synchronization_1.png)
 
 Vậy sử dụng ECB nguy hiểm đến mức nào ? Việc mã hóa từng khối theo một cách tuần tự có thể khiến cho dữ liệu bị **lộ cấu trúc**, để có thể hình dung rõ hơn về việc bị lộ cấu trúc, các bạn có thể xem qua bức ảnh này:
 
-![Penguin](https://github.com/Giapppp/CTF/blob/main/HTB/HTB%202023/Perfect%20Synchronization/picture/Screenshot%202023-03-24%20004932.png?raw=true)
+![Penguin](/images/perfect-synchronization/perfect-synchronization_2.png)
 
  Có thể thấy với việc sử dụng ECB, cấu trúc dữ liệu có thể bị lộ ra. Nếu như attacker biết một vài thông tin về dữ liệu, khả năng cao họ sẽ có thể khôi phục lại dữ liệu đó, đây chính là điều mà chúng ta dùng để giải quyết challenge này
  ## 3. Khai thác thông tin
@@ -95,7 +96,7 @@ print(len(alphabet))
 ```
 
 Chương trình trên sẽ in ra:
-![](https://github.com/Giapppp/CTF/blob/main/HTB/HTB%202023/Perfect%20Synchronization/picture/336711106_705787337895603_1310398408998920420_n.png?raw=true)
+![](/images/perfect-synchronization/perfect-synchronization_3.png)
 
 Vậy là có đúng 29 kí tự khác nhau như ta đã dự đoán. 
 Vì số lượng byte khác nhau bằng với số kí tự khác nhau trong `alphabet`, ta có thể xây dựng một **ánh xạ** đi từ tập các byte đến các kí tự trong alphabet. Ánh xạ này là **song ánh**, tức là với mỗi byte trong tập các byte khác nhau, ta chỉ có thể tìm được 1 kí tự trong alphabet tương ứng. Từ đó, ta có thể khôi phục lại MESSAGE.
@@ -112,7 +113,7 @@ Và chúng ta sẽ có **MESSAGE** !!!! :
 Hoặc không...
 
 Các kí tự trong MESSAGE mà ta nhận được đều đã bị xáo trộn vị trí lại với nhau, do chúng ta chưa thể tìm ra kí tự trong `alphabet` tương ứng với mỗi byte khác nhau. Để khắc phục lỗi này, ta có thể sử dụng [**quipqiup**](https://quipqiup.com/) (nếu như bạn đọc kĩ description của challenge, bạn sẽ thấy cái tên này), một trang web giúp chúng ta tìm lại thứ tự đúng của các kí tự, từ đó in ra một nội dung có ý nghĩa:
-![quipqiup](https://github.com/Giapppp/CTF/blob/main/HTB/HTB%202023/Perfect%20Synchronization/picture/Screenshot%202023-03-24%20000943.png?raw=true)
+![quipqiup](/images/perfect-synchronization/perfect-synchronization_4.png)
 
 
 Khi đưa MESSAGE của chúng ta vào trong quipqiup, ta sẽ nhận lại được đoạn MESSAGE khác:
@@ -125,7 +126,7 @@ message = 'FREQUENCYKANALYSISKISKBASEDKONKTHEKFACTKTHATKINKANYKGIVENKSTRETCHKOFK
 print(message.replace("K", " "))
 ```
 Chương trình sẽ in ra:
-![](https://github.com/Giapppp/CTF/blob/main/HTB/HTB%202023/Perfect%20Synchronization/picture/336289483_1148115492536604_2198124458387426435_n.png?raw=true)
+![](/images/perfect-synchronization/perfect-synchronization_5.png)
 Nếu đọc kĩ, ta có thể thấy được một đoạn rất khả nghi :D
 
     HTBJA SIMPLE SUBSTITUTION IS WEAJ}

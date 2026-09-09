@@ -18,7 +18,7 @@
             <li>
                 <a class="post-link" href="{{ .RelPermalink }}">
                     <span class="post-title">{{ .Title }}</span>
-                    <time>{{ .PublishDate.Format $.Site.Params.dateFormat }}</time>
+                    {{ partial "post-metadata.html" . }}
                 </a>
                 {{ with .Params.tags }}
                 <div class="post-tags">

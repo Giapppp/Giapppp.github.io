@@ -14,9 +14,20 @@
         flex-direction: row;
         justify-content: space-between;
         line-height: 1.6;
+        gap: 0.25rem 1rem;
 
-        & > time {
+        & > .post-metadata {
+          flex-shrink: 0;
+          font-size: 0.85rem;
+          color: var(--fg4);
+          white-space: nowrap;
           text-align: right;
+        }
+
+        @media screen and (max-width: $mobile-breakpoint) {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 0.75rem;
         }
       }
 

@@ -4,6 +4,7 @@ title: "SEETF 2023"
 date: "2023-06-13"
 categories: ["Writeup"]
 tags: ["RC4", "RSA", "Discrete Log", "Coppersmith"]
+language: "Vietnamese"
 ---
 Lời giải của mình cho một số bài Cryptography trong giải SEETF 2023
 

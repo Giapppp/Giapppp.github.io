@@ -4,6 +4,7 @@ date: 2025-03-25
 description:
 categories: ["Learning"]
 tags: ["ZKP"]
+language: "English"
 ---
 
 From older posts, we have seen various types of polynomial commitment scheme (PCS) and interactive oracle proof (IOP), which are important ingredients for building SNARK for general circuits. Today, we will talk about FRI - another polynomial commitment scheme based on Reed-Solomon code, and revisiting Fiat-Shamir Transformation.
@@ -142,7 +143,7 @@ We will discover how to fix above problems, which are used to build FRI.
 
 - We have $8$ is the biggest power of two that is a divisor of $p - 1 = 40$. And we have all 8-th roots of unity of $F_{41}$ are $\{1, -1, 3, -3, 9, -9, 14, -14\}$. With these informations, we can construct the Merkle Tree like this:
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp7/zkp7_1.png)
+![Image alt](/images/zkp7/zkp7_1.png)
 
 #### Fixing the second problem
 
@@ -164,7 +165,7 @@ The prover need to repeatly do the following:
 
 Here is an example of this phase in $\mathbb{F}_{41}$ and $8 = 4 * \rho^{-1}$
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp7/zkp7_1.png)
+![Image alt](/images/zkp7/zkp7_1.png)
 
 ##### Query Phase
 
@@ -189,7 +190,7 @@ Let's talk about Folding Phase in a mathematical way: Suppose we need to commit 
 
 Let's back to an example in $\mathbb{F}_{41}[X]$ and explain what happen in this picture.
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp7/zkp7_1.png)
+![Image alt](/images/zkp7/zkp7_1.png)
 
 - Fact: Let $x$ and $-x$ be $n$-th roots of unity and $z = x^2$, then $$q_{fold}(z) = \frac{r + x}{2x}q(x) + \frac{r - x}{-2x}q(-x)$$
 
@@ -253,7 +254,7 @@ You can notice that Fiat-Shamir transformation is appeared many times in this ZK
 
 #### Recall
 
-![Image alt](https://raw.githubusercontent.com/Giapppp/Giapppp.github.io/main/static/images/zkp7/zkp7_2.png)
+![Image alt](/images/zkp7/zkp7_2.png)
 
 - In the interactive protocol, we have three steps:
     + $P$ send message $\alpha$ to $V$

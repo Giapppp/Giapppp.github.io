@@ -4,6 +4,7 @@ title: "bi0sCTF 2024"
 date: "2024-02-26"
 categories: ["Writeup"]
 tags: ["Linear Algebra", "RSA", "Coppersmith", "ECC", "ECDSA", "Dual_EC_DRBG"]
+language: "English"
 ---
 Last weekend, I played bi0sCTF with my team @1337%Yogurt. Here is my writeup for all crypto challenges.
 

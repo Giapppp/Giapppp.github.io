@@ -4,6 +4,7 @@ title: "Yao's Garbled Circuit"
 date: "2024-08-17"
 categories: ["Learning"]
 tags: ["MPC", "Garbled Circuit"]
+language: "English"
 ---
 
 ## Introduction

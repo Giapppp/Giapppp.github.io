@@ -4,6 +4,7 @@ title: "Isogeny-Based Cryptography"
 date: "2023-09-08"
 categories: ["Learning"]
 tags: ["Isogeny", "ECC"]
+language: "English"
 ---
 This is my note about Isogeny-Based Cryptography, I really want to make a CTF challenge about isogeny, but I don't understand enough to make it :(. Maybe someday I can do it <3
 
