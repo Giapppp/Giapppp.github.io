@@ -86,12 +86,12 @@
   {{ partial "sharingbuttons.html" . }}
   <div class="paginator">
     {{ if .PrevInSection }}
-    <a class="link" href="{{ .PrevInSection.Permalink }}" title="{{ .PrevInSection.Title }}">← prev</a>
+    <a class="link" href="{{ .PrevInSection.Params.externalURL | default .PrevInSection.Permalink }}" title="{{ .PrevInSection.Title }}">← prev</a>
     {{ else }}
     <a></a>
     {{ end }}
     {{ if .NextInSection }}
-    <a class="link" href="{{ .NextInSection.Permalink }}" title="{{ .NextInSection.Title }}">next →</a>
+    <a class="link" href="{{ .NextInSection.Params.externalURL | default .NextInSection.Permalink }}" title="{{ .NextInSection.Title }}">next →</a>
     {{ else }}
     <a></a>
     {{ end }}

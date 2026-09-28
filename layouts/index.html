@@ -16,7 +16,7 @@
         <ul class="post-list">
             {{ range first 5 (where .Site.RegularPages "Section" "posts") }}
             <li>
-                <a class="post-link" href="{{ .RelPermalink }}">
+                <a class="post-link" href="{{ .Params.externalURL | default .RelPermalink }}">
                     <span class="post-title">{{ .Title }}</span>
                     {{ partial "post-metadata.html" . }}
                 </a>

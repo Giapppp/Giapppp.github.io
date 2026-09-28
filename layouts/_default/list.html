@@ -31,7 +31,7 @@
     <ul>
       {{ range .Pages }}
       <li>
-        <a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <a class="link" href="{{ .Params.externalURL | default .RelPermalink }}">{{ .Title }}</a>
         {{ partial "post-metadata.html" . }}
       </li>
       {{ end }}
